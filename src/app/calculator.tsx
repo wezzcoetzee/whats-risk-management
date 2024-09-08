@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
@@ -43,16 +43,42 @@ export default function TradeCalculator() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<TradeCalculatorInput>({
     resolver: zodResolver(tradeCalculatorSchema),
   });
 
-  const [output, setOutput] = useState<string | null>(null);
+  const [output, setOutput] = useState<{
+    stopLossPercentage: number;
+    positionSize: number;
+    margin: number;
+  } | null>(null);
 
   const onSubmit = (data: TradeCalculatorInput) => {
     const { entryPrice, stopLoss, riskAmount, leaverageAmount } = data;
-    const output = `Entry Price: ${entryPrice}, Stop Loss: ${stopLoss}, Risk Amount: ${riskAmount}, Leaverage Amount: ${leaverageAmount}`;
-    setOutput(output);
+    const difference = Math.abs(entryPrice - stopLoss);
+
+    const stopLossPercentage = (difference / entryPrice) * 100;
+    const positionSize = (riskAmount / stopLossPercentage) * 100;
+
+    const margin = positionSize * leaverageAmount;
+
+    setOutput({
+      stopLossPercentage,
+      positionSize,
+      margin,
+    });
+  };
+
+  const onReset = () => {
+    // reset form
+    reset({
+      entryPrice: 0,
+      stopLoss: 0,
+      riskAmount: 0,
+      leaverageAmount: 1,
+    });
+    setOutput(null);
   };
 
   return (
@@ -114,7 +140,12 @@ export default function TradeCalculator() {
             )}
           </div>
           <div className="flex justify-end space-x-2">
-            <Button type="button" className="w-full" variant="outline">
+            <Button
+              type="button"
+              className="w-full"
+              variant="outline"
+              onClick={onReset}
+            >
               Reset
             </Button>
             <Button className="w-full" type="submit">
@@ -125,12 +156,16 @@ export default function TradeCalculator() {
       </div>
 
       {/* Bottom half for outputs */}
-      <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
-        <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
-        <div className="flex-grow overflow-y-auto">
-          {output && <p>{output}</p>}
+      {output && (
+        <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
+          <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
+          <div className="flex-grow overflow-y-auto">
+            <p>Position Size: {output.positionSize}</p>
+            <p>Sopt Loss %: {output.stopLossPercentage}</p>
+            <p>Margin Required: {output.margin}</p>
+          </div>
         </div>
-      </div>
+      )}
     </Card>
   );
 }
