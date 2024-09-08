@@ -2,8 +2,8 @@ import TradeCalculator from "./calculator";
 
 export default function Home() {
   return (
-    <div>
+    <main className="flex items-center justify-center">
       <TradeCalculator />
-    </div>
+    </main>
   );
 }

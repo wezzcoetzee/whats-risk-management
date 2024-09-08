@@ -65,7 +65,7 @@ export default function TradeCalculator() {
   };
 
   return (
-    <Card className="w-full max-w-sm mx-auto p-4 bg-gray-200 rounded-lg shadow-lg flex flex-col">
+    <Card className="w-full max-w-sm mx-auto p-4 rounded-lg shadow-lg flex flex-col">
       {/* Top half for inputs */}
       <div className="flex-grow flex flex-col space-y-4">
         <Input
