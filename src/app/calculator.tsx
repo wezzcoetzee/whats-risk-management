@@ -8,6 +8,17 @@ import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
+import { percentage, usd } from "@/utils/formatters";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { register } from "module";
 
 const tradeCalculatorSchema = z.object({
   entryPrice: z
@@ -39,14 +50,11 @@ const tradeCalculatorSchema = z.object({
 type TradeCalculatorInput = z.infer<typeof tradeCalculatorSchema>;
 
 export default function TradeCalculator() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<TradeCalculatorInput>({
+  const form = useForm<TradeCalculatorInput>({
     resolver: zodResolver(tradeCalculatorSchema),
   });
+
+  const { handleSubmit, reset } = form;
 
   const [output, setOutput] = useState<{
     stopLossPercentage: number;
@@ -61,7 +69,7 @@ export default function TradeCalculator() {
     const stopLossPercentage = (difference / entryPrice) * 100;
     const positionSize = (riskAmount / stopLossPercentage) * 100;
 
-    const margin = positionSize * leaverageAmount;
+    const margin = positionSize / leaverageAmount;
 
     setOutput({
       stopLossPercentage,
@@ -84,75 +92,87 @@ export default function TradeCalculator() {
   return (
     <Card className="w-full max-w-sm mx-auto p-4 rounded-lg shadow-lg flex flex-col">
       <div className="flex-grow flex flex-col space-y-4">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="units">Entry Price</Label>
-            <Input
-              id="entryPrice"
-              type="number"
-              step="any"
-              {...register("entryPrice", { valueAsNumber: true })}
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="entryPrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>entry price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.entryPrice && (
-              <p className="text-red-500 text-sm">
-                {errors.entryPrice.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="cost">Stop Loss</Label>
-            <Input
-              id="stopLoss"
-              type="number"
-              step="any"
-              {...register("stopLoss", { valueAsNumber: true })}
+            <FormField
+              control={form.control}
+              name="stopLoss"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>stop loss</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.stopLoss && (
-              <p className="text-red-500 text-sm">{errors.stopLoss.message}</p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="cost">Risk Amount</Label>
-            <Input
-              id="riskAmount"
-              type="number"
-              step="any"
-              {...register("riskAmount", { valueAsNumber: true })}
+            <FormField
+              control={form.control}
+              name="riskAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>risk amount</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.riskAmount && (
-              <p className="text-red-500 text-sm">
-                {errors.riskAmount.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="cost">Leaverage Amount</Label>
-            <Input
-              id="leaverageAmount"
-              type="number"
-              step="any"
-              {...register("leaverageAmount", { valueAsNumber: true })}
+            <FormField
+              control={form.control}
+              name="leaverageAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>leaverage amount</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.leaverageAmount && (
-              <p className="text-red-500 text-sm">
-                {errors.leaverageAmount.message}
-              </p>
-            )}
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              className="w-full"
-              variant="outline"
-              onClick={onReset}
-            >
-              Reset
-            </Button>
-            <Button className="w-full" type="submit">
-              Calculate
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-end space-x-2">
+              <Button
+                type="button"
+                className="w-full"
+                variant="outline"
+                onClick={onReset}
+              >
+                Reset
+              </Button>
+              <Button className="w-full" type="submit">
+                Calculate
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
 
       {/* Bottom half for outputs */}
@@ -160,9 +180,9 @@ export default function TradeCalculator() {
         <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
           <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
           <div className="flex-grow overflow-y-auto">
-            <p>Position Size: {output.positionSize}</p>
-            <p>Sopt Loss %: {output.stopLossPercentage}</p>
-            <p>Margin Required: {output.margin}</p>
+            <p>Position Size: {usd.format(output.positionSize)}</p>
+            <p>Sopt Loss %: {percentage.format(output.stopLossPercentage)}</p>
+            <p>Margin Required: {usd.format(output.margin)}</p>
           </div>
         </div>
       )}
