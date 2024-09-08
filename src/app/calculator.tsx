@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Label } from "@/components/ui/label";
+import { Info } from "lucide-react";
 import { percentage, usd } from "@/utils/formatters";
 import {
   Form,
@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { register } from "module";
 
 const tradeCalculatorSchema = z.object({
   entryPrice: z
@@ -50,6 +49,8 @@ const tradeCalculatorSchema = z.object({
 type TradeCalculatorInput = z.infer<typeof tradeCalculatorSchema>;
 
 export default function TradeCalculator() {
+  const [showInfo, setShowInfo] = useState(false);
+
   const form = useForm<TradeCalculatorInput>({
     resolver: zodResolver(tradeCalculatorSchema),
   });
@@ -91,6 +92,24 @@ export default function TradeCalculator() {
 
   return (
     <Card className="w-full max-w-sm mx-auto p-4 rounded-lg shadow-lg flex flex-col">
+      <div className="relative">
+        <h1 className="text-2xl font-bold pb-3">position size</h1>
+        <p className="text-sm text-gray-500">
+          calculate your trade position size, stop loss percentage and margin
+          required.
+        </p>
+        <div className="absolute top-0 right-0">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowInfo(!showInfo)}
+          >
+            <Info className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Info className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Display Info</span>
+          </Button>
+        </div>
+      </div>
       <div className="flex-grow flex flex-col space-y-4">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -103,9 +122,11 @@ export default function TradeCalculator() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  {showInfo && (
+                    <FormDescription>
+                      the price at which you will enter the trade.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -119,9 +140,12 @@ export default function TradeCalculator() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  {showInfo && (
+                    <FormDescription>
+                      the price at which you will exit the trade. If the trade
+                      is going in the opposite direction.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -135,9 +159,11 @@ export default function TradeCalculator() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  {showInfo && (
+                    <FormDescription>
+                      the amount you are willing to risk/lose on this trade.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -151,9 +177,11 @@ export default function TradeCalculator() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  {showInfo && (
+                    <FormDescription>
+                      the amount of leverage you are using for this trade.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -165,10 +193,10 @@ export default function TradeCalculator() {
                 variant="outline"
                 onClick={onReset}
               >
-                Reset
+                reset
               </Button>
               <Button className="w-full" type="submit">
-                Calculate
+                calculate
               </Button>
             </div>
           </form>
@@ -180,9 +208,9 @@ export default function TradeCalculator() {
         <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
           <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
           <div className="flex-grow overflow-y-auto">
-            <p>Position Size: {usd.format(output.positionSize)}</p>
-            <p>Sopt Loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>Margin Required: {usd.format(output.margin)}</p>
+            <p>position size: {usd.format(output.positionSize)}</p>
+            <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
+            <p>margin required: {usd.format(output.margin)}</p>
           </div>
         </div>
       )}
