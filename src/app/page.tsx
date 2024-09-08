@@ -1,9 +1,9 @@
-import TradeCalculator from "./calculator";
+import PositionCalculator from "./position-calculator";
 
 export default function Home() {
   return (
     <main className="flex items-center justify-center">
-      <TradeCalculator />
+      <PositionCalculator />
     </main>
   );
 }

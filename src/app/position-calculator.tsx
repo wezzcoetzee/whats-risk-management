@@ -19,40 +19,49 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const tradeCalculatorSchema = z.object({
-  entryPrice: z
-    .number()
-    .positive()
-    .refine((val) => val > 0, {
-      message: "Entry Price must be greater than 0",
-    }),
-  stopLoss: z
-    .number()
-    .positive()
-    .refine((val) => val > 0, {
-      message: "Stop Loss must be greater than 0",
-    }),
-  riskAmount: z
-    .number()
-    .positive()
-    .refine((val) => val > 0, {
-      message: "Risk Amount must be greater than 0",
-    }),
-  leaverageAmount: z
-    .number()
-    .positive()
-    .refine((val) => val > 0, {
-      message: "Leaverage Amount must be greater than 0",
-    }),
-});
+const positionCalculatorSchema = z
+  .object({
+    entryPrice: z.coerce
+      .number()
+      .positive()
+      .refine((val) => val > 0, {
+        message: "Entry Price must be greater than 0",
+      }),
+    stopLoss: z.coerce
+      .number()
+      .positive()
+      .refine((val) => val > 0, {
+        message: "Stop Loss must be greater than 0",
+      }),
+    riskAmount: z.coerce
+      .number()
+      .positive()
+      .refine((val) => val > 0, {
+        message: "Risk Amount must be greater than 0",
+      }),
+    leaverageAmount: z.coerce
+      .number()
+      .positive()
+      .refine((val) => val > 0, {
+        message: "Leaverage Amount must be greater than 0",
+      }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.entryPrice === data.stopLoss)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `entry price and stop loss cannot be the same`,
+        path: ["entryPrice", "stopLoss"],
+      });
+  });
 
-type TradeCalculatorInput = z.infer<typeof tradeCalculatorSchema>;
+type PositionCalculatorInput = z.infer<typeof positionCalculatorSchema>;
 
-export default function TradeCalculator() {
+export default function PositionCalculator() {
   const [showInfo, setShowInfo] = useState(false);
 
-  const form = useForm<TradeCalculatorInput>({
-    resolver: zodResolver(tradeCalculatorSchema),
+  const form = useForm<PositionCalculatorInput>({
+    resolver: zodResolver(positionCalculatorSchema),
   });
 
   const { handleSubmit, reset } = form;
@@ -63,7 +72,7 @@ export default function TradeCalculator() {
     margin: number;
   } | null>(null);
 
-  const onSubmit = (data: TradeCalculatorInput) => {
+  const onSubmit = (data: PositionCalculatorInput) => {
     const { entryPrice, stopLoss, riskAmount, leaverageAmount } = data;
     const difference = Math.abs(entryPrice - stopLoss);
 
@@ -92,9 +101,9 @@ export default function TradeCalculator() {
 
   return (
     <Card className="w-full max-w-sm mx-auto p-4 rounded-lg shadow-lg flex flex-col">
-      <div className="relative">
+      <div className="relative mb-4">
         <h1 className="text-2xl font-bold pb-3">position size</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm">
           calculate your trade position size, stop loss percentage and margin
           required.
         </p>
@@ -120,7 +129,7 @@ export default function TradeCalculator() {
                 <FormItem>
                   <FormLabel>entry price</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   {showInfo && (
                     <FormDescription>
@@ -138,7 +147,7 @@ export default function TradeCalculator() {
                 <FormItem>
                   <FormLabel>stop loss</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   {showInfo && (
                     <FormDescription>
@@ -157,7 +166,7 @@ export default function TradeCalculator() {
                 <FormItem>
                   <FormLabel>risk amount</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   {showInfo && (
                     <FormDescription>
@@ -175,7 +184,7 @@ export default function TradeCalculator() {
                 <FormItem>
                   <FormLabel>leaverage amount</FormLabel>
                   <FormControl>
-                    <Input placeholder="" {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   {showInfo && (
                     <FormDescription>
