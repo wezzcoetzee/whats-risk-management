@@ -1,4 +1,3 @@
-import PositionCalculator from "./position-calculator";
 import TabsContainer from "./tabs";
 
 export default function Home() {

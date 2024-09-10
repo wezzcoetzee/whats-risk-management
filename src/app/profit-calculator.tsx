@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Info } from "lucide-react";
+import { Info, Plus, Minus } from "lucide-react";
 import { percentage, usd } from "@/utils/formatters";
 import {
   Form,
@@ -33,7 +33,7 @@ const profitCalculatorSchema = z
       .refine((val) => val > 0, {
         message: "Stop Loss must be greater than 0",
       }),
-    riskAmount: z.coerce
+    positionSize: z.coerce
       .number()
       .positive()
       .refine((val) => val > 0, {
@@ -45,6 +45,7 @@ const profitCalculatorSchema = z
       .refine((val) => val > 0, {
         message: "Leaverage Amount must be greater than 0",
       }),
+    takeProfits: z.array(z.number()).max(4),
   })
   .superRefine((data, ctx) => {
     if (data.entryPrice === data.stopLoss)
@@ -58,6 +59,8 @@ const profitCalculatorSchema = z
 type ProfitCalculatorInput = z.infer<typeof profitCalculatorSchema>;
 
 export default function ProfitCalculator() {
+  const [takeProfits, setTakeProfits] = useState<number[]>([0]);
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
   const [showInfo, setShowInfo] = useState(false);
 
   const form = useForm<ProfitCalculatorInput>({
@@ -72,12 +75,37 @@ export default function ProfitCalculator() {
     margin: number;
   } | null>(null);
 
+  const addTakeProfit = () => {
+    if (takeProfits.length < 4) {
+      setTakeProfits([...takeProfits, takeProfits.length]);
+    }
+  };
+
+  const removeTakeProfit = (index: number) => {
+    if (takeProfits.length === 1) {
+      return;
+    }
+    setTakeProfits(takeProfits.filter((_, i) => i !== index));
+  };
+
   const onSubmit = (data: ProfitCalculatorInput) => {
-    const { entryPrice, stopLoss, riskAmount, leaverageAmount } = data;
+    const result = profitCalculatorSchema.safeParse({
+      takeProfits: takeProfits.map((index) =>
+        Number(formData[`zone-${index}`])
+      ),
+    });
+
+    if (!result.success) {
+      console.error("Validation failed:", result.error);
+      return;
+    }
+
+    console.log(data);
+
+    const { entryPrice, stopLoss, positionSize, leaverageAmount } = data;
     const difference = Math.abs(entryPrice - stopLoss);
 
     const stopLossPercentage = (difference / entryPrice) * 100;
-    const positionSize = (riskAmount / stopLossPercentage) * 100;
 
     const margin = positionSize / leaverageAmount;
 
@@ -93,7 +121,7 @@ export default function ProfitCalculator() {
     reset({
       entryPrice: 0,
       stopLoss: 0,
-      riskAmount: 0,
+      positionSize: 0,
       leaverageAmount: 1,
     });
     setOutput(null);
@@ -160,10 +188,10 @@ export default function ProfitCalculator() {
             />
             <FormField
               control={form.control}
-              name="riskAmount"
+              name="positionSize"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>risk amount</FormLabel>
+                  <FormLabel>position size</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
@@ -194,6 +222,56 @@ export default function ProfitCalculator() {
                 </FormItem>
               )}
             />
+            <div className="flex items-center space-x-2 justify-between">
+              <h2>take profit</h2>
+              <Button
+                variant="outline"
+                size="icon"
+                type="button"
+                onClick={addTakeProfit}
+              >
+                <Plus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Plus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">add take profit</span>
+              </Button>
+            </div>
+            {takeProfits.map((_, index) => (
+              <FormField
+                key={index}
+                control={form.control}
+                name={`takeProfits.${index}`}
+                render={({ field }) => (
+                  <div className="flex items-end space-x-2">
+                    <div className="flex-grow">
+                      <FormItem>
+                        <FormLabel>{`take profit ${index + 1}`}</FormLabel>
+                        <FormControl>
+                          <Input type="number" {...field} />
+                        </FormControl>
+                        {showInfo && (
+                          <FormDescription>
+                            the amount of prfit you want to take at this level.
+                          </FormDescription>
+                        )}
+                        <FormMessage />
+                      </FormItem>
+                    </div>
+                    <div className="">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        type="button"
+                        onClick={() => removeTakeProfit(index)}
+                      >
+                        <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                        <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        <span className="sr-only">remove take profit</span>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              />
+            ))}
             <div className="flex justify-end space-x-2">
               <Button
                 type="button"
