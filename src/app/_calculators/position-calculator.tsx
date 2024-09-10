@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Info } from "lucide-react";
 import { percentage, usd } from "@/utils/formatters";
 import {
   Form,
@@ -18,6 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import CalculatorHeader from "./header";
+import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 
 const positionCalculatorSchema = z
   .object({
@@ -100,26 +101,14 @@ export default function PositionCalculator() {
   };
 
   return (
-    <Card className="w-full max-w-sm mx-auto p-4 rounded-lg shadow-lg flex flex-col">
-      <div className="relative mb-4">
-        <h1 className="text-2xl font-bold pb-3">position size</h1>
-        <p className="text-sm">
-          calculate your trade position size, stop loss percentage and margin
-          required.
-        </p>
-        <div className="absolute top-0 right-0">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setShowInfo(!showInfo)}
-          >
-            <Info className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Info className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Display Info</span>
-          </Button>
-        </div>
-      </div>
-      <div className="flex-grow flex flex-col space-y-4">
+    <Card className={cardContainerStyles}>
+      <CalculatorHeader
+        header="position size"
+        subheader="calculate your trade position size, stop loss percentage and margin required."
+        showInfo={showInfo}
+        setShowInfo={() => setShowInfo(!showInfo)}
+      />
+      <div className={formContainerStyles}>
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FormField
