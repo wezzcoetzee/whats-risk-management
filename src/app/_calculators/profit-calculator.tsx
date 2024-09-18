@@ -35,13 +35,13 @@ const profitCalculatorSchema = z
       .refine((val) => val > 0, {
         message: "Stop Loss must be greater than 0",
       }),
-    positionSize: z.coerce
+    effectivePositionSize: z.coerce
       .number()
       .positive()
       .refine((val) => val > 0, {
         message: "Risk Amount must be greater than 0",
       }),
-    leaverageAmount: z.coerce
+    leverage: z.coerce
       .number()
       .positive()
       .refine((val) => val > 0, {
@@ -69,8 +69,8 @@ export default function ProfitCalculator() {
     defaultValues: {
       entryPrice: 55000,
       stopLoss: 54000,
-      positionSize: 1000,
-      leaverageAmount: 10,
+      effectivePositionSize: 1000,
+      leverage: 10,
       takeProfitLevels: [59000, 62000, 69000, 72000],
     },
   });
@@ -79,10 +79,11 @@ export default function ProfitCalculator() {
 
   const [output, setOutput] = useState<{
     stopLossPercentage: number;
-    positionSize: number;
-    margin: number;
+    effectivePositionSize: number;
+    riskAmount: number;
     profitAtEachTakeProfitLevel: number[];
-    riskAtStopLoss: number;
+    margin: number;
+    profit: number;
   } | null>(null);
 
   const addTakeProfit = () => {
@@ -104,8 +105,8 @@ export default function ProfitCalculator() {
     const {
       entryPrice,
       stopLoss,
-      positionSize,
-      leaverageAmount,
+      effectivePositionSize,
+      leverage,
       takeProfitLevels,
     } = data;
 
@@ -113,22 +114,32 @@ export default function ProfitCalculator() {
 
     const stopLossPercentage = difference / entryPrice;
 
-    const margin = positionSize / leaverageAmount;
+    const margin = effectivePositionSize / leverage;
 
-    const sizeAtEachTakeProfitLevel = positionSize / takeProfitLevels.length;
+    const riskAmount = effectivePositionSize * stopLossPercentage;
+
+    const sizeAtEachTakeProfitLevel =
+      effectivePositionSize / takeProfitLevels.length;
 
     const profitAtEachTakeProfitLevel = takeProfitLevels.map(
-      (level) => (sizeAtEachTakeProfitLevel * level) / 100
+      (level) =>
+        sizeAtEachTakeProfitLevel *
+        effectivePositionSize *
+        (Math.abs(level - entryPrice) / entryPrice)
     );
 
-    const riskAtStopLoss = margin * stopLossPercentage;
+    const profit = profitAtEachTakeProfitLevel.reduce(
+      (acc, curr) => acc + curr,
+      0
+    );
 
     setOutput({
       stopLossPercentage,
-      positionSize,
-      margin,
+      effectivePositionSize,
+      riskAmount,
       profitAtEachTakeProfitLevel,
-      riskAtStopLoss,
+      margin,
+      profit,
     });
   };
 
@@ -137,8 +148,8 @@ export default function ProfitCalculator() {
     reset({
       entryPrice: 0,
       stopLoss: 0,
-      positionSize: 0,
-      leaverageAmount: 1,
+      effectivePositionSize: 0,
+      leverage: 1,
     });
     setOutput(null);
   };
@@ -193,7 +204,7 @@ export default function ProfitCalculator() {
             />
             <FormField
               control={form.control}
-              name="positionSize"
+              name="effectivePositionSize"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>position size</FormLabel>
@@ -211,7 +222,7 @@ export default function ProfitCalculator() {
             />
             <FormField
               control={form.control}
-              name="leaverageAmount"
+              name="leverage"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>leaverage amount</FormLabel>
@@ -297,10 +308,10 @@ export default function ProfitCalculator() {
         <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
           <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
           <div className="flex-grow overflow-y-auto">
-            <p>position size: {usd.format(output.positionSize)}</p>
+            <p>position size: {usd.format(output.effectivePositionSize)}</p>
             <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>margin required: {usd.format(output.margin)}</p>
-            <p>risk at stop loss: {usd.format(output.riskAtStopLoss)}</p>
+            <p>risk amount required: {usd.format(output.riskAmount)}</p>
+            <p>risk at stop loss: {usd.format(output.margin)}</p>
             <p>profit at each take profit level:</p>
             <ul>
               {output.profitAtEachTakeProfitLevel.map((profit, index) => (
@@ -309,6 +320,7 @@ export default function ProfitCalculator() {
                 </li>
               ))}
             </ul>
+            <p>total profit: {usd.format(output.profit)}</p>
           </div>
         </div>
       )}

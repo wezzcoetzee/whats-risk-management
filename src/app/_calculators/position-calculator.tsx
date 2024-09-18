@@ -83,7 +83,7 @@ export default function PositionCalculator() {
     const { entryPrice, stopLoss, riskAmount, leverage } = data;
     const difference = Math.abs(entryPrice - stopLoss);
 
-    const stopLossPercentage = difference / entryPrice; // correct
+    const stopLossPercentage = difference / entryPrice;
     const riskMagnified = riskAmount * leverage;
 
     const effectivePositionSize = riskMagnified / stopLossPercentage;
