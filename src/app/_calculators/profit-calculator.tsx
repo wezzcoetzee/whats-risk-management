@@ -66,6 +66,13 @@ export default function ProfitCalculator() {
 
   const form = useForm<ProfitCalculatorInput>({
     resolver: zodResolver(profitCalculatorSchema),
+    defaultValues: {
+      entryPrice: 55000,
+      stopLoss: 54000,
+      positionSize: 1000,
+      leaverageAmount: 10,
+      takeProfitLevels: [59000, 62000, 69000, 72000],
+    },
   });
 
   const { handleSubmit, reset } = form;
@@ -74,6 +81,8 @@ export default function ProfitCalculator() {
     stopLossPercentage: number;
     positionSize: number;
     margin: number;
+    profitAtEachTakeProfitLevel: number[];
+    riskAtStopLoss: number;
   } | null>(null);
 
   const addTakeProfit = () => {
@@ -99,16 +108,27 @@ export default function ProfitCalculator() {
       leaverageAmount,
       takeProfitLevels,
     } = data;
+
     const difference = Math.abs(entryPrice - stopLoss);
 
-    const stopLossPercentage = (difference / entryPrice) * 100;
+    const stopLossPercentage = difference / entryPrice;
 
     const margin = positionSize / leaverageAmount;
+
+    const sizeAtEachTakeProfitLevel = positionSize / takeProfitLevels.length;
+
+    const profitAtEachTakeProfitLevel = takeProfitLevels.map(
+      (level) => (sizeAtEachTakeProfitLevel * level) / 100
+    );
+
+    const riskAtStopLoss = margin * stopLossPercentage;
 
     setOutput({
       stopLossPercentage,
       positionSize,
       margin,
+      profitAtEachTakeProfitLevel,
+      riskAtStopLoss,
     });
   };
 
@@ -280,6 +300,15 @@ export default function ProfitCalculator() {
             <p>position size: {usd.format(output.positionSize)}</p>
             <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
             <p>margin required: {usd.format(output.margin)}</p>
+            <p>risk at stop loss: {usd.format(output.riskAtStopLoss)}</p>
+            <p>profit at each take profit level:</p>
+            <ul>
+              {output.profitAtEachTakeProfitLevel.map((profit, index) => (
+                <li key={index}>
+                  {`take profit ${index + 1}: ${usd.format(profit)}`}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       )}

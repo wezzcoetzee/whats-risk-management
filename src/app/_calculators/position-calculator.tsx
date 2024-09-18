@@ -40,7 +40,7 @@ const positionCalculatorSchema = z
       .refine((val) => val > 0, {
         message: "Risk Amount must be greater than 0",
       }),
-    leaverageAmount: z.coerce
+    leverage: z.coerce
       .number()
       .positive()
       .refine((val) => val > 0, {
@@ -63,29 +63,36 @@ export default function PositionCalculator() {
 
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
+    defaultValues: {
+      entryPrice: 55000,
+      stopLoss: 54000,
+      riskAmount: 100,
+      leverage: 10,
+    },
   });
 
   const { handleSubmit, reset } = form;
 
   const [output, setOutput] = useState<{
     stopLossPercentage: number;
-    positionSize: number;
-    margin: number;
+    actualPositionSize: number;
+    effectivePositionSize: number;
   } | null>(null);
 
   const onSubmit = (data: PositionCalculatorInput) => {
-    const { entryPrice, stopLoss, riskAmount, leaverageAmount } = data;
+    const { entryPrice, stopLoss, riskAmount, leverage } = data;
     const difference = Math.abs(entryPrice - stopLoss);
 
-    const stopLossPercentage = (difference / entryPrice) * 100;
-    const positionSize = (riskAmount / stopLossPercentage) * 100;
+    const stopLossPercentage = difference / entryPrice; // correct
+    const riskMagnified = riskAmount * leverage;
 
-    const margin = positionSize / leaverageAmount;
+    const effectivePositionSize = riskMagnified / stopLossPercentage;
+    const actualPositionSize = effectivePositionSize / leverage;
 
     setOutput({
       stopLossPercentage,
-      positionSize,
-      margin,
+      actualPositionSize,
+      effectivePositionSize,
     });
   };
 
@@ -95,7 +102,7 @@ export default function PositionCalculator() {
       entryPrice: 0,
       stopLoss: 0,
       riskAmount: 0,
-      leaverageAmount: 1,
+      leverage: 1,
     });
     setOutput(null);
   };
@@ -168,7 +175,7 @@ export default function PositionCalculator() {
             />
             <FormField
               control={form.control}
-              name="leaverageAmount"
+              name="leverage"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>leaverage amount</FormLabel>
@@ -206,9 +213,12 @@ export default function PositionCalculator() {
         <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
           <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
           <div className="flex-grow overflow-y-auto">
-            <p>position size: {usd.format(output.positionSize)}</p>
             <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>margin required: {usd.format(output.margin)}</p>
+            <p>actual position size: {usd.format(output.actualPositionSize)}</p>
+            <p>
+              effective position size:{" "}
+              {usd.format(output.effectivePositionSize)}
+            </p>
           </div>
         </div>
       )}
