@@ -60,19 +60,28 @@ const profitCalculatorSchema = z
 
 type ProfitCalculatorInput = z.infer<typeof profitCalculatorSchema>;
 
+const defaultFormValues: ProfitCalculatorInput = {
+  entryPrice: 55000,
+  stopLoss: 54000,
+  effectivePositionSize: 1000,
+  leverage: 10,
+  takeProfitLevels: [59000, 62000, 69000, 72420],
+};
+
+const takeProfitsDefault = () => {
+  return defaultFormValues.takeProfitLevels.map((_, index) => index);
+};
+
 export default function ProfitCalculator() {
-  const [takeProfits, setTakeProfits] = useState<number[]>([0]);
+  const [takeProfits, setTakeProfits] = useState<number[]>(
+    process.env.NODE_ENV === "development" ? takeProfitsDefault() : [0]
+  );
   const [showInfo, setShowInfo] = useState(false);
 
   const form = useForm<ProfitCalculatorInput>({
     resolver: zodResolver(profitCalculatorSchema),
-    defaultValues: {
-      entryPrice: 55000,
-      stopLoss: 54000,
-      effectivePositionSize: 1000,
-      leverage: 10,
-      takeProfitLevels: [59000, 62000, 69000, 72420],
-    },
+    defaultValues:
+      process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
   const { handleSubmit, reset } = form;
