@@ -71,7 +71,7 @@ export default function ProfitCalculator() {
       stopLoss: 54000,
       effectivePositionSize: 1000,
       leverage: 10,
-      takeProfitLevels: [59000, 62000, 69000, 72000],
+      takeProfitLevels: [59000, 62000, 69000, 72420],
     },
   });
 
@@ -84,6 +84,7 @@ export default function ProfitCalculator() {
     profitAtEachTakeProfitLevel: number[];
     margin: number;
     profit: number;
+    percentageOfHoldingsSoldAtEachTakeProfit: number;
   } | null>(null);
 
   const addTakeProfit = () => {
@@ -118,12 +119,12 @@ export default function ProfitCalculator() {
 
     const riskAmount = effectivePositionSize * stopLossPercentage;
 
-    const sizeAtEachTakeProfitLevel =
-      effectivePositionSize / takeProfitLevels.length;
+    const percentageOfHoldingsSoldAtEachTakeProfit =
+      effectivePositionSize / takeProfitLevels.length / effectivePositionSize;
 
     const profitAtEachTakeProfitLevel = takeProfitLevels.map(
       (level) =>
-        sizeAtEachTakeProfitLevel *
+        percentageOfHoldingsSoldAtEachTakeProfit *
         effectivePositionSize *
         (Math.abs(level - entryPrice) / entryPrice)
     );
@@ -140,6 +141,7 @@ export default function ProfitCalculator() {
       profitAtEachTakeProfitLevel,
       margin,
       profit,
+      percentageOfHoldingsSoldAtEachTakeProfit,
     });
   };
 
@@ -310,8 +312,14 @@ export default function ProfitCalculator() {
           <div className="flex-grow overflow-y-auto">
             <p>position size: {usd.format(output.effectivePositionSize)}</p>
             <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>risk amount required: {usd.format(output.riskAmount)}</p>
-            <p>risk at stop loss: {usd.format(output.margin)}</p>
+            <p>lost at stop loss: {usd.format(output.riskAmount)}</p>
+            <p>margin required: {usd.format(output.margin)}</p>
+            <p>
+              percentage sold at each take profit level:{" "}
+              {percentage.format(
+                output.percentageOfHoldingsSoldAtEachTakeProfit
+              )}
+            </p>
             <p>profit at each take profit level:</p>
             <ul>
               {output.profitAtEachTakeProfitLevel.map((profit, index) => (
