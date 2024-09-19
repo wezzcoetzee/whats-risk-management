@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 import { Plus, Minus } from "lucide-react";
 import { percentage, usd } from "@/utils/formatters";
 import {
@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import CalculatorHeader from "./header";
+import FormRow from "./form-row";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 
 const profitCalculatorSchema = z
@@ -175,80 +176,87 @@ export default function ProfitCalculator() {
       />
       <div className={formContainerStyles}>
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="entryPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>entry price</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the price at which you will enter the trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stopLoss"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>stop loss</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the price at which you will exit the trade. If the trade
-                      is going in the opposite direction.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="effectivePositionSize"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>position size</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the amount you are willing to risk/lose on this trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="leverage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>leaverage amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the amount of leverage you are using for this trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormRow>
+              <FormField
+                control={form.control}
+                name="entryPrice"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>entry price</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the price at which you will enter the trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="stopLoss"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>stop loss</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the price at which you will exit the trade. If the trade
+                        is going in the opposite direction.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FormRow>
+            <FormRow>
+              <FormField
+                control={form.control}
+                name="effectivePositionSize"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>position size</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the amount you are willing to risk/lose on this trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="leverage"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>leaverage amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the amount of leverage you are using for this trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FormRow>
             <div className="flex items-center space-x-2 justify-between">
               <h2>take profit</h2>
               <Button
@@ -262,42 +270,18 @@ export default function ProfitCalculator() {
                 <span className="sr-only">add take profit</span>
               </Button>
             </div>
-            {takeProfits.map((_, index) => (
-              <FormField
-                key={index}
-                control={form.control}
-                name={`takeProfitLevels.${index}`}
-                render={({ field }) => (
-                  <div className="flex items-end space-x-2">
-                    <div className="flex-grow">
-                      <FormItem>
-                        <FormLabel>{`take profit ${index + 1}`}</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                        {showInfo && (
-                          <FormDescription>
-                            the amount of prfit you want to take at this level.
-                          </FormDescription>
-                        )}
-                        <FormMessage />
-                      </FormItem>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      type="button"
-                      onClick={() => removeTakeProfit(index)}
-                    >
-                      <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                      <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                      <span className="sr-only">remove take profit</span>
-                    </Button>
-                  </div>
-                )}
-              />
-            ))}
-            <div className="flex justify-end space-x-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {takeProfits.map((_, index) => (
+                <TakeProfitLevel
+                  key={index}
+                  form={form}
+                  index={index}
+                  showInfo={showInfo}
+                  removeTakeProfit={removeTakeProfit}
+                />
+              ))}
+            </div>
+            <div className="flex justify-end space-x-2 mt-5">
               <Button
                 type="button"
                 className="w-full"
@@ -344,3 +328,48 @@ export default function ProfitCalculator() {
     </Card>
   );
 }
+
+const TakeProfitLevel = ({
+  form,
+  index,
+  showInfo,
+  removeTakeProfit,
+}: {
+  form: UseFormReturn<ProfitCalculatorInput>;
+  index: number;
+  showInfo: boolean;
+  removeTakeProfit: (index: number) => void;
+}) => (
+  <FormField
+    control={form.control}
+    name={`takeProfitLevels.${index}`}
+    render={({ field }) => (
+      <div className="flex items-end space-x-2">
+        <div className="flex-grow">
+          <FormItem>
+            <FormLabel>{`take profit ${index + 1}`}</FormLabel>
+            <FormControl>
+              <Input type="number" {...field} />
+            </FormControl>
+            {showInfo && (
+              <FormDescription>
+                the amount of prfit you want to take at this level.
+              </FormDescription>
+            )}
+            <FormMessage />
+          </FormItem>
+        </div>
+        <Button
+          variant="outline"
+          size="icon"
+          type="button"
+          onClick={() => removeTakeProfit(index)}
+        >
+          <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">remove take profit</span>
+        </Button>
+      </div>
+    )}
+  />
+);

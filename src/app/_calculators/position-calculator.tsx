@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import CalculatorHeader from "./header";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
+import FormRow from "./form-row";
 
 const positionCalculatorSchema = z
   .object({
@@ -117,81 +118,88 @@ export default function PositionCalculator() {
       />
       <div className={formContainerStyles}>
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="entryPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>entry price</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the price at which you will enter the trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="stopLoss"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>stop loss</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the price at which you will exit the trade. If the trade
-                      is going in the opposite direction.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="riskAmount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>risk amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the amount you are willing to risk/lose on this trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="leverage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>leaverage amount</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  {showInfo && (
-                    <FormDescription>
-                      the amount of leverage you are using for this trade.
-                    </FormDescription>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-end space-x-2">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormRow>
+              <FormField
+                control={form.control}
+                name="entryPrice"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>entry price</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the price at which you will enter the trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="stopLoss"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>stop loss</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the price at which you will exit the trade. If the trade
+                        is going in the opposite direction.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FormRow>
+            <FormRow>
+              <FormField
+                control={form.control}
+                name="riskAmount"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>risk amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the amount you are willing to risk/lose on this trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="leverage"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>leaverage amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    {showInfo && (
+                      <FormDescription>
+                        the amount of leverage you are using for this trade.
+                      </FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FormRow>
+            <div className="flex justify-end space-x-2 mt-5">
               <Button
                 type="button"
                 className="w-full"
