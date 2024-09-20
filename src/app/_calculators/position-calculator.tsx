@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,6 +20,7 @@ import CalculatorHeader from "./header";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 import FormRow from "./form-row";
 import Output from "./output";
+import Buttons from "./buttons";
 
 const positionCalculatorSchema = z
   .object({
@@ -203,41 +203,40 @@ export default function PositionCalculator() {
                 )}
               />
             </FormRow>
-            <div className="flex justify-end space-x-2 mt-5">
-              <Button
-                type="button"
-                className="w-full"
-                variant="outline"
-                onClick={onReset}
-              >
-                reset
-              </Button>
-              <Button className="w-full" type="submit">
-                calculate
-              </Button>
-            </div>
+            {output && <ResultOuput output={output} />}
+            <Buttons onReset={onReset} />
           </form>
         </Form>
       </div>
-
-      {output && (
-        <Output>
-          <div className="flex flex-row">
-            <div className="flex-1">
-              <p className="text-sm font-bold">stop loss:</p>
-              <p>{percentage.format(output.stopLossPercentage)}</p>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold">margin:</p>
-              <p>{usd.format(output.actualPositionSize)}</p>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold">position size:</p>
-              <p>{usd.format(output.effectivePositionSize)}</p>
-            </div>
-          </div>
-        </Output>
-      )}
     </Card>
   );
 }
+
+const ResultOuput = ({
+  output,
+}: {
+  output: {
+    stopLossPercentage: number;
+    actualPositionSize: number;
+    effectivePositionSize: number;
+  };
+}) => {
+  return (
+    <Output>
+      <div className="flex flex-row">
+        <div className="flex-1">
+          <p className="text-sm font-bold">stop loss:</p>
+          <p>{percentage.format(output.stopLossPercentage)}</p>
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-bold">margin:</p>
+          <p>{usd.format(output.actualPositionSize)}</p>
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-bold">position size:</p>
+          <p>{usd.format(output.effectivePositionSize)}</p>
+        </div>
+      </div>
+    </Output>
+  );
+};

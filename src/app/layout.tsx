@@ -9,11 +9,11 @@ import { Suspense } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "positions",
+  title: "whatsriskmanagement",
   description:
     "calculate your trade position size, stop loss percentage and margin required.",
   openGraph: {
-    title: "positions",
+    title: "whatsriskmanagement",
     description:
       "calculate your trade position size, stop loss percentage and margin required.",
   },
