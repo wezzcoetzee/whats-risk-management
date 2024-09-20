@@ -21,6 +21,7 @@ import {
 import CalculatorHeader from "./header";
 import FormRow from "./form-row";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
+import Output from "./output";
 
 const profitCalculatorSchema = z
   .object({
@@ -89,7 +90,6 @@ export default function ProfitCalculator() {
 
   const [output, setOutput] = useState<{
     stopLossPercentage: number;
-    effectivePositionSize: number;
     riskAmount: number;
     profitAtEachTakeProfitLevel: number[];
     margin: number;
@@ -146,7 +146,6 @@ export default function ProfitCalculator() {
 
     setOutput({
       stopLossPercentage,
-      effectivePositionSize,
       riskAmount,
       profitAtEachTakeProfitLevel,
       margin,
@@ -156,7 +155,6 @@ export default function ProfitCalculator() {
   };
 
   const onReset = () => {
-    // reset form
     reset({
       entryPrice: 0,
       stopLoss: 0,
@@ -298,32 +296,45 @@ export default function ProfitCalculator() {
         </Form>
       </div>
 
-      {/* Bottom half for outputs */}
       {output && (
-        <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
-          <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
-          <div className="flex-grow overflow-y-auto">
-            <p>position size: {usd.format(output.effectivePositionSize)}</p>
-            <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>lost at stop loss: {usd.format(output.riskAmount)}</p>
-            <p>margin required: {usd.format(output.margin)}</p>
-            <p>
-              percentage sold at each take profit level:{" "}
+        <Output>
+          <div className="flex flex-row">
+            <div className="flex-1">
+              <p className="text-sm font-bold">risk:</p>
+              <p>
+                {usd.format(output.riskAmount)} (
+                {percentage.format(output.stopLossPercentage)})
+              </p>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold">margin:</p>
+              <p>{usd.format(output.margin)}</p>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold">profit:</p>
+              <p>{usd.format(output.profit)}</p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <p className="text-sm font-bold">
+              profit at each take profit level (
               {percentage.format(
                 output.percentageOfHoldingsSoldAtEachTakeProfit
               )}
+              ):
             </p>
-            <p>profit at each take profit level:</p>
-            <ul>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {output.profitAtEachTakeProfitLevel.map((profit, index) => (
                 <li key={index}>
-                  {`take profit ${index + 1}: ${usd.format(profit)}`}
+                  <p className="text-sm font-bold">{`Take Profit ${
+                    index + 1
+                  }:`}</p>
+                  <p>{usd.format(profit)}</p>
                 </li>
               ))}
             </ul>
-            <p>total profit: {usd.format(output.profit)}</p>
           </div>
-        </div>
+        </Output>
       )}
     </Card>
   );

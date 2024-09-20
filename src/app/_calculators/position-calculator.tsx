@@ -20,6 +20,7 @@ import {
 import CalculatorHeader from "./header";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 import FormRow from "./form-row";
+import Output from "./output";
 
 const positionCalculatorSchema = z
   .object({
@@ -98,7 +99,6 @@ export default function PositionCalculator() {
   };
 
   const onReset = () => {
-    // reset form
     reset({
       entryPrice: 0,
       stopLoss: 0,
@@ -216,19 +216,23 @@ export default function PositionCalculator() {
         </Form>
       </div>
 
-      {/* Bottom half for outputs */}
       {output && (
-        <div className="flex-grow  mt-4 rounded-lg p-2 flex flex-col">
-          <h2 className="text-sm font-bold mb-2">Calculation Outputs</h2>
-          <div className="flex-grow overflow-y-auto">
-            <p>stop loss %: {percentage.format(output.stopLossPercentage)}</p>
-            <p>actual position size: {usd.format(output.actualPositionSize)}</p>
-            <p>
-              effective position size:{" "}
-              {usd.format(output.effectivePositionSize)}
-            </p>
+        <Output>
+          <div className="flex flex-row">
+            <div className="flex-1">
+              <p className="text-sm font-bold">stop loss:</p>
+              <p>{percentage.format(output.stopLossPercentage)}</p>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold">margin:</p>
+              <p>{usd.format(output.actualPositionSize)}</p>
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-bold">position size:</p>
+              <p>{usd.format(output.effectivePositionSize)}</p>
+            </div>
           </div>
-        </div>
+        </Output>
       )}
     </Card>
   );
