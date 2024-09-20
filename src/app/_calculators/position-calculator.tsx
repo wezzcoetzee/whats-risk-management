@@ -60,17 +60,20 @@ const positionCalculatorSchema = z
 
 type PositionCalculatorInput = z.infer<typeof positionCalculatorSchema>;
 
+const defaultFormValues: PositionCalculatorInput = {
+  entryPrice: 55000,
+  stopLoss: 54000,
+  riskAmount: 100,
+  leverage: 10,
+};
+
 export default function PositionCalculator() {
   const [showInfo, setShowInfo] = useState(false);
 
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
-    defaultValues: {
-      entryPrice: 55000,
-      stopLoss: 54000,
-      riskAmount: 100,
-      leverage: 10,
-    },
+    defaultValues:
+      process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
   const { handleSubmit, reset } = form;
@@ -152,8 +155,8 @@ export default function PositionCalculator() {
                     </FormControl>
                     {showInfo && (
                       <FormDescription>
-                        the price at which you will exit the trade. If the trade
-                        is going in the opposite direction.
+                        the price at which you will exit the trade if the trade
+                        goes against you.
                       </FormDescription>
                     )}
                     <FormMessage />
@@ -173,7 +176,7 @@ export default function PositionCalculator() {
                     </FormControl>
                     {showInfo && (
                       <FormDescription>
-                        the amount you are willing to risk/lose on this trade.
+                        the amount you are willing to lose on this trade.
                       </FormDescription>
                     )}
                     <FormMessage />
@@ -191,7 +194,8 @@ export default function PositionCalculator() {
                     </FormControl>
                     {showInfo && (
                       <FormDescription>
-                        the amount of leverage you are using for this trade.
+                        leverage is the use of borrowed capital or debt to
+                        increase the potential return on investment.
                       </FormDescription>
                     )}
                     <FormMessage />

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/providers/providers";
 import { Header } from "./_header/header";
 import Script from "next/script";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,8 +41,10 @@ export default function RootLayout({
         `}
         </Script>
         <Providers>
-          <Header />
-          <div className="pt-24">{children}</div>
+          <Suspense>
+            <Header />
+            <div className="pt-24">{children}</div>
+          </Suspense>
         </Providers>
       </body>
     </html>

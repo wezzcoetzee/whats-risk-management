@@ -247,7 +247,8 @@ export default function ProfitCalculator() {
                     </FormControl>
                     {showInfo && (
                       <FormDescription>
-                        the amount of leverage you are using for this trade.
+                        leverage is the use of borrowed capital or debt to
+                        increase the potential return on investment.
                       </FormDescription>
                     )}
                     <FormMessage />
@@ -355,31 +356,36 @@ const TakeProfitLevel = ({
     control={form.control}
     name={`takeProfitLevels.${index}`}
     render={({ field }) => (
-      <div className="flex items-end space-x-2">
-        <div className="flex-grow">
-          <FormItem>
-            <FormLabel>{`take profit ${index + 1}`}</FormLabel>
-            <FormControl>
-              <Input type="number" {...field} />
-            </FormControl>
-            {showInfo && (
-              <FormDescription>
-                the amount of prfit you want to take at this level.
-              </FormDescription>
-            )}
-            <FormMessage />
-          </FormItem>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-end gap-4">
+          <div className="flex-grow">
+            <FormItem>
+              <FormLabel>{`take profit ${index + 1}`}</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            type="button"
+            onClick={() => removeTakeProfit(index)}
+          >
+            <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">remove take profit</span>
+          </Button>
         </div>
-        <Button
-          variant="outline"
-          size="icon"
-          type="button"
-          onClick={() => removeTakeProfit(index)}
-        >
-          <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">remove take profit</span>
-        </Button>
+        {showInfo && (
+          <div className="flex-1">
+            <FormDescription>
+              the amount of profit you will make at this level.
+            </FormDescription>
+          </div>
+        )}
       </div>
     )}
   />

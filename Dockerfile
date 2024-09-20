@@ -9,8 +9,8 @@ RUN bun install
 
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN bun --bun run build
 
-CMD bun --bun run start
+CMD ["bun", "--bun", "run", "start"]
