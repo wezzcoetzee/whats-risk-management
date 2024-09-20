@@ -15,10 +15,12 @@ export default function CalculatorHeader({
   showInfo,
 }: CalculatorHeaderProps) {
   return (
-    <div className="relative mb-4">
-      <h1 className="text-2xl font-bold pb-3">{header}</h1>
-      <p className="text-sm">{subheader}</p>
-      <div className="absolute top-0 right-0">
+    <div className="flex flex-row mb-4">
+      <div className="flex-1">
+        <h1 className="text-2xl font-bold pb-3">{header}</h1>
+        <p className="text-sm">{subheader}</p>
+      </div>
+      <div className="flex justify-end align-top">
         <Button
           variant="outline"
           size="icon"
