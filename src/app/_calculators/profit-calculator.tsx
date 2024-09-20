@@ -95,6 +95,7 @@ export default function ProfitCalculator() {
     margin: number;
     profit: number;
     percentageOfHoldingsSoldAtEachTakeProfit: number;
+    tradeR: number;
   } | null>(null);
 
   const addTakeProfit = () => {
@@ -144,6 +145,8 @@ export default function ProfitCalculator() {
       0
     );
 
+    const tradeR = profit / riskAmount;
+
     setOutput({
       stopLossPercentage,
       riskAmount,
@@ -151,6 +154,7 @@ export default function ProfitCalculator() {
       margin,
       profit,
       percentageOfHoldingsSoldAtEachTakeProfit,
+      tradeR,
     });
   };
 
@@ -300,6 +304,10 @@ export default function ProfitCalculator() {
       {output && (
         <Output>
           <div className="flex flex-row">
+            <div className="flex-1">
+              <p className="text-sm font-bold">risk/reward (r):</p>
+              <p>{output.tradeR.toFixed(2)}</p>
+            </div>
             <div className="flex-1">
               <p className="text-sm font-bold">risk:</p>
               <p>
