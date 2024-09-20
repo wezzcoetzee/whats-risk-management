@@ -303,23 +303,23 @@ export default function ProfitCalculator() {
 
       {output && (
         <Output>
-          <div className="flex flex-row">
-            <div className="flex-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
               <p className="text-sm font-bold">risk/reward (r):</p>
               <p>{output.tradeR.toFixed(2)}</p>
             </div>
-            <div className="flex-1">
+            <div>
               <p className="text-sm font-bold">risk:</p>
               <p>
                 {usd.format(output.riskAmount)} (
                 {percentage.format(output.stopLossPercentage)})
               </p>
             </div>
-            <div className="flex-1">
+            <div>
               <p className="text-sm font-bold">margin:</p>
               <p>{usd.format(output.margin)}</p>
             </div>
-            <div className="flex-1">
+            <div>
               <p className="text-sm font-bold">profit:</p>
               <p>{usd.format(output.profit)}</p>
             </div>
@@ -332,7 +332,7 @@ export default function ProfitCalculator() {
               )}
               ):
             </p>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {output.profitAtEachTakeProfitLevel.map((profit, index) => (
                 <li key={index}>
                   <p className="text-sm font-bold">{`Take Profit ${
