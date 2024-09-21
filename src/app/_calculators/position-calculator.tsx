@@ -25,28 +25,36 @@ import Buttons from "./buttons";
 const positionCalculatorSchema = z
   .object({
     entryPrice: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "entry price is required",
+        invalid_type_error: "entry price must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Entry Price must be greater than 0",
+        message: "entry price must be greater than 0",
       }),
     stopLoss: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "stop loss is required",
+        invalid_type_error: "stop loss must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Stop Loss must be greater than 0",
+        message: "stop loss must be greater than 0",
       }),
     riskAmount: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "risk amount is required",
+        invalid_type_error: "risk amount must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Risk Amount must be greater than 0",
+        message: "risk amount must be greater than 0",
       }),
     leverage: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "leverage is required",
+        invalid_type_error: "leverage must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Leaverage Amount must be greater than 0",
+        message: "leaverage amount must be greater than 0",
       }),
   })
   .superRefine((data, ctx) => {
@@ -72,8 +80,7 @@ export default function PositionCalculator() {
 
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
-    defaultValues:
-      process.env.NODE_ENV === "development" ? defaultFormValues : {},
+    defaultValues: process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
   const { handleSubmit, reset } = form;

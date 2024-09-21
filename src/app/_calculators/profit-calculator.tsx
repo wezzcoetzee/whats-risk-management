@@ -27,30 +27,49 @@ import Buttons from "./buttons";
 const profitCalculatorSchema = z
   .object({
     entryPrice: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "entry price is required",
+        invalid_type_error: "entry price must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Entry Price must be greater than 0",
+        message: "entry price must be greater than 0",
       }),
     stopLoss: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "stop loss is required",
+        invalid_type_error: "stop loss must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Stop Loss must be greater than 0",
+        message: "stop loss must be greater than 0",
       }),
     effectivePositionSize: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "position size is required",
+        invalid_type_error: "position size must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Risk Amount must be greater than 0",
+        message: "position size must be greater than 0",
       }),
     leverage: z.coerce
-      .number()
-      .positive()
+      .number({
+        required_error: "leverage is required",
+        invalid_type_error: "leverage must be a number",
+      })
       .refine((val) => val > 0, {
-        message: "Leaverage Amount must be greater than 0",
+        message: "leverage amount must be greater than 0",
       }),
-    takeProfitLevels: z.array(z.coerce.number()).max(4),
+    takeProfitLevels: z
+      .array(
+        z.coerce
+          .number({
+            required_error: "take profit is required",
+            invalid_type_error: "take profit must be a number",
+          })
+          .refine((val) => val > 0, {
+            message: "take profit amount must be greater than 0",
+          })
+      )
+      .max(4),
   })
   .superRefine((data, ctx) => {
     if (data.entryPrice === data.stopLoss)
@@ -83,8 +102,7 @@ export default function ProfitCalculator() {
 
   const form = useForm<ProfitCalculatorInput>({
     resolver: zodResolver(profitCalculatorSchema),
-    defaultValues:
-      process.env.NODE_ENV === "development" ? defaultFormValues : {},
+    defaultValues: process.env.NODE_ENV === "development" ? {} : {},
   });
 
   const { handleSubmit, reset } = form;
