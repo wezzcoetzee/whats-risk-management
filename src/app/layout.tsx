@@ -5,6 +5,7 @@ import { Providers } from "@/providers/providers";
 import { Header } from "./_header/header";
 import Script from "next/script";
 import { Suspense } from "react";
+import Footer from "./_footer/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +44,8 @@ export default function RootLayout({
         <Providers>
           <Suspense>
             <Header />
-            <div className="pt-24">{children}</div>
+            <div className="pt-[90px] pb-[120px] md:pb-[80px]">{children}</div>
+            <Footer />
           </Suspense>
         </Providers>
       </body>
