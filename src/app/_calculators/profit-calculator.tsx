@@ -102,7 +102,8 @@ export default function ProfitCalculator() {
 
   const form = useForm<ProfitCalculatorInput>({
     resolver: zodResolver(profitCalculatorSchema),
-    defaultValues: process.env.NODE_ENV === "development" ? {} : {},
+    defaultValues:
+      process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
   const { handleSubmit, reset } = form;
@@ -381,28 +382,25 @@ const TakeProfitLevel = ({
     name={`takeProfitLevels.${index}`}
     render={({ field }) => (
       <div className="flex flex-col gap-4">
-        <div className="flex items-end gap-4">
-          <div className="flex-grow">
-            <FormItem>
-              <FormLabel>{`take profit ${index + 1}`}</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
+        <FormItem>
+          <FormLabel>{`take profit ${index + 1}`}</FormLabel>
+          <div className="flex flex-row gap-4">
+            <FormControl>
+              <Input type="number" {...field} />
+            </FormControl>
+            <Button
+              variant="outline"
+              size="icon"
+              type="button"
+              onClick={() => removeTakeProfit(index)}
+            >
+              <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">remove take profit</span>
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            type="button"
-            onClick={() => removeTakeProfit(index)}
-          >
-            <Minus className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Minus className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">remove take profit</span>
-          </Button>
-        </div>
+          <FormMessage />
+        </FormItem>
         {showInfo && (
           <div className="flex-1">
             <FormDescription>

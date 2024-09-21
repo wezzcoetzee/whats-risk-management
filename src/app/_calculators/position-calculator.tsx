@@ -80,7 +80,8 @@ export default function PositionCalculator() {
 
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
-    defaultValues: process.env.NODE_ENV === "development" ? defaultFormValues : {},
+    defaultValues:
+      process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
   const { handleSubmit, reset } = form;
@@ -231,15 +232,15 @@ const ResultOuput = ({
   return (
     <Output>
       <div className="flex flex-row">
-        <div className="flex-1">
+        <div className="flex-grow">
           <p className="text-sm font-bold">stop loss:</p>
           <p>{percentage.format(output.stopLossPercentage)}</p>
         </div>
-        <div className="flex-1">
+        <div className="flex-grow">
           <p className="text-sm font-bold">margin:</p>
           <p>{usd.format(output.actualPositionSize)}</p>
         </div>
-        <div className="flex-1">
+        <div className="flex-grow">
           <p className="text-sm font-bold">position size:</p>
           <p>{usd.format(output.effectivePositionSize)}</p>
         </div>
