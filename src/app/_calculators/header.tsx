@@ -20,7 +20,7 @@ export default function CalculatorHeader({
         <h1 className="text-2xl font-bold pb-3">{header}</h1>
         <p className="text-sm">{subheader}</p>
       </div>
-      <div className="flex justify-end align-top">
+      {/* <div className="flex justify-end align-top">
         <Button
           variant="outline"
           size="icon"
@@ -30,7 +30,7 @@ export default function CalculatorHeader({
           <Info className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Display Info</span>
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

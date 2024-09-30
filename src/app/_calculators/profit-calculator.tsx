@@ -23,6 +23,7 @@ import FormRow from "./form-row";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 import Output from "./output";
 import Buttons from "./buttons";
+import FormInputNumber from "./form-number-input";
 
 const profitCalculatorSchema = z
   .object({
@@ -207,37 +208,22 @@ export default function ProfitCalculator() {
                 control={form.control}
                 name="entryPrice"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>entry price</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    {showInfo && (
-                      <FormDescription>
-                        the price at which you will enter the trade.
-                      </FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+                  <FormInputNumber
+                    title="entry price"
+                    description="the price at which you will enter the trade."
+                    {...field}
+                  />
                 )}
               />
               <FormField
                 control={form.control}
                 name="stopLoss"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>stop loss</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    {showInfo && (
-                      <FormDescription>
-                        the price at which you will exit the trade. If the trade
-                        is going in the opposite direction.
-                      </FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+                  <FormInputNumber
+                    title="stop loss"
+                    description="the price at which you will exit the trade if the trade goes against you."
+                    {...field}
+                  />
                 )}
               />
             </FormRow>
@@ -246,37 +232,22 @@ export default function ProfitCalculator() {
                 control={form.control}
                 name="effectivePositionSize"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>position size</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    {showInfo && (
-                      <FormDescription>
-                        the amount you are willing to risk/lose on this trade.
-                      </FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+                  <FormInputNumber
+                    title="position size"
+                    description="the amount you are willing to risk/lose on this trade."
+                    {...field}
+                  />
                 )}
               />
               <FormField
                 control={form.control}
                 name="leverage"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>leaverage amount</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    {showInfo && (
-                      <FormDescription>
-                        leverage is the use of borrowed capital or debt to
-                        increase the potential return on investment.
-                      </FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
+                  <FormInputNumber
+                    title="leaverage amount"
+                    description="leverage is the use of borrowed capital or debt to increase the potential return on investment."
+                    {...field}
+                  />
                 )}
               />
             </FormRow>
