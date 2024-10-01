@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Info } from "lucide-react";
 
 interface CalculatorHeaderProps {
   header: string;
@@ -11,8 +11,8 @@ interface CalculatorHeaderProps {
 export default function CalculatorHeader({
   header,
   subheader,
-  setShowInfo,
-  showInfo,
+  // setShowInfo,
+  // showInfo,
 }: CalculatorHeaderProps) {
   return (
     <div className="flex flex-row mb-4">
