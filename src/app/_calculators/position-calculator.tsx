@@ -60,18 +60,27 @@ const positionCalculatorSchema = z
 
 type PositionCalculatorInput = z.infer<typeof positionCalculatorSchema>;
 
-const defaultFormValues: PositionCalculatorInput = {
+const developmentFormValues: PositionCalculatorInput = {
   entryPrice: 55000,
   stopLoss: 54000,
   riskAmount: 100,
   leverage: 10,
 };
 
+const defaultFormValues: PositionCalculatorInput = {
+  entryPrice: 0,
+  stopLoss: 0,
+  riskAmount: 0,
+  leverage: 1,
+};
+
 export default function PositionCalculator() {
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
     defaultValues:
-      process.env.NODE_ENV === "development" ? defaultFormValues : {},
+      process.env.NODE_ENV === "development"
+        ? developmentFormValues
+        : defaultFormValues,
   });
 
   const { handleSubmit, reset } = form;
