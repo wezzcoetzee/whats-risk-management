@@ -12,7 +12,7 @@ import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 import FormRow from "./form-row";
 import Output from "./output";
 import Buttons from "./buttons";
-import FormInputNumber from "./form-number-input";
+import { FormInputNumber } from "./form-number-input";
 
 const positionCalculatorSchema = z
   .object({

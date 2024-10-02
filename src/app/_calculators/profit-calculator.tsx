@@ -23,7 +23,7 @@ import FormRow from "./form-row";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
 import Output from "./output";
 import Buttons from "./buttons";
-import FormInputNumber from "./form-number-input";
+import { FormInputNumber } from "./form-number-input";
 
 const profitCalculatorSchema = z
   .object({
@@ -91,14 +91,7 @@ const defaultFormValues: ProfitCalculatorInput = {
   takeProfitLevels: [59000, 62000, 69000, 72420],
 };
 
-const takeProfitsDefault = () => {
-  return defaultFormValues.takeProfitLevels.map((_, index) => index);
-};
-
 export default function ProfitCalculator() {
-  const [takeProfits, setTakeProfits] = useState<number[]>(
-    process.env.NODE_ENV === "development" ? takeProfitsDefault() : [0]
-  );
   const [showInfo, setShowInfo] = useState(false);
 
   const form = useForm<ProfitCalculatorInput>({
@@ -107,7 +100,7 @@ export default function ProfitCalculator() {
       process.env.NODE_ENV === "development" ? defaultFormValues : {},
   });
 
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset, watch, setValue } = form;
 
   const [output, setOutput] = useState<{
     stopLossPercentage: number;
@@ -120,21 +113,22 @@ export default function ProfitCalculator() {
   } | null>(null);
 
   const addTakeProfit = () => {
-    if (takeProfits.length < 4) {
-      setTakeProfits([...takeProfits, takeProfits.length]);
+    if (watch("takeProfitLevels").length < 4) {
+      const currentTakeProfits = watch("takeProfitLevels");
+      setValue("takeProfitLevels", [...currentTakeProfits, 0]);
     }
   };
 
   const removeTakeProfit = (index: number) => {
-    if (takeProfits.length === 1) {
+    if (watch("takeProfitLevels").length === 1) {
       return;
     }
-    setTakeProfits(takeProfits.filter((_, i) => i !== index));
+    const currentTakeProfits = watch("takeProfitLevels");
+    const takeProfits = currentTakeProfits.filter((_, i) => i !== index);
+    setValue("takeProfitLevels", takeProfits);
   };
 
   const onSubmit = (data: ProfitCalculatorInput) => {
-    console.log(data);
-
     const {
       entryPrice,
       stopLoss,
@@ -276,7 +270,7 @@ export default function ProfitCalculator() {
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {takeProfits.map((_, index) => (
+              {watch("takeProfitLevels").map((_, index) => (
                 <TakeProfitLevel
                   key={index}
                   form={form}
