@@ -6,7 +6,7 @@ export default function Footer() {
         financial advice. All information on this website is for educational
         purposes only.
       </p>
-      <p className="text-xs">version 0.2.0</p>
+      <p className="text-xs">version 0.1.0</p>
     </footer>
   );
 }

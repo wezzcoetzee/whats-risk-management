@@ -23,10 +23,11 @@ export default function FormInputNumber({
     <FormItem className="flex-1">
       <div className="mb-[18px]">
         <FormLabel>
-          <div className="flex flex-row gap-4 justify-start align-middle">
+          <div className="flex flex-row gap-4 justify-start items-center">
             <span>{title}</span>
             <Button
               variant="outline"
+              type="button"
               size="icon"
               className="w-[14px] h-[14px] radius-full"
               onClick={() => setShowInfo(!showInfo)}

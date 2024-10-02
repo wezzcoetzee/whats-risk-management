@@ -68,8 +68,6 @@ const defaultFormValues: PositionCalculatorInput = {
 };
 
 export default function PositionCalculator() {
-  const [showInfo, setShowInfo] = useState(false);
-
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
     defaultValues:
@@ -115,8 +113,6 @@ export default function PositionCalculator() {
       <CalculatorHeader
         header="position size"
         subheader="calculate your trade position size, stop loss percentage and margin required."
-        showInfo={showInfo}
-        setShowInfo={() => setShowInfo(!showInfo)}
       />
       <div className={formContainerStyles}>
         <Form {...form}>

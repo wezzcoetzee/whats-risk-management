@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Info } from "lucide-react";
 import { percentage, usd } from "@/utils/formatters";
 import {
   Form,
@@ -194,8 +194,6 @@ export default function ProfitCalculator() {
       <CalculatorHeader
         header="profit"
         subheader="calculate the total profit you will make on a trade."
-        showInfo={showInfo}
-        setShowInfo={() => setShowInfo(!showInfo)}
       />
       <div className={formContainerStyles}>
         <Form {...form}>
@@ -252,7 +250,20 @@ export default function ProfitCalculator() {
               />
             </FormRow>
             <div className="flex items-center space-x-2 justify-between">
-              <h2>take profit</h2>
+              <div className="flex flex-row gap-4 justify-center items-center">
+                <h2>take profit</h2>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  className="w-[14px] h-[14px] radius-full"
+                  onClick={() => setShowInfo(!showInfo)}
+                >
+                  <Info className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Info className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Display Info take profit</span>
+                </Button>
+              </div>
               <Button
                 variant="outline"
                 size="icon"
