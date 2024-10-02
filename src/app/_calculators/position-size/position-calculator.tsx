@@ -1,78 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { Card } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { percentage, usd } from "@/utils/formatters";
 import { Form, FormField } from "@/components/ui/form";
-import CalculatorHeader from "./header";
+import CalculatorHeader from "../shared/header";
 import { cardContainerStyles, formContainerStyles } from "@/styles/common";
-import FormRow from "./form-row";
-import Output from "./output";
-import Buttons from "./buttons";
-import { FormInputNumber } from "./form-number-input";
-
-const positionCalculatorSchema = z
-  .object({
-    entryPrice: z.coerce
-      .number({
-        required_error: "entry price is required",
-        invalid_type_error: "entry price must be a number",
-      })
-      .refine((val) => val > 0, {
-        message: "entry price must be greater than 0",
-      }),
-    stopLoss: z.coerce
-      .number({
-        required_error: "stop loss is required",
-        invalid_type_error: "stop loss must be a number",
-      })
-      .refine((val) => val > 0, {
-        message: "stop loss must be greater than 0",
-      }),
-    riskAmount: z.coerce
-      .number({
-        required_error: "risk amount is required",
-        invalid_type_error: "risk amount must be a number",
-      })
-      .refine((val) => val > 0, {
-        message: "risk amount must be greater than 0",
-      }),
-    leverage: z.coerce
-      .number({
-        required_error: "leverage is required",
-        invalid_type_error: "leverage must be a number",
-      })
-      .refine((val) => val > 0, {
-        message: "leaverage amount must be greater than 0",
-      }),
-  })
-  .superRefine((data, ctx) => {
-    if (data.entryPrice === data.stopLoss)
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `entry price and stop loss cannot be the same`,
-        path: ["entryPrice", "stopLoss"],
-      });
-  });
-
-type PositionCalculatorInput = z.infer<typeof positionCalculatorSchema>;
-
-const developmentFormValues: PositionCalculatorInput = {
-  entryPrice: 55000,
-  stopLoss: 54000,
-  riskAmount: 100,
-  leverage: 10,
-};
-
-const defaultFormValues: PositionCalculatorInput = {
-  entryPrice: 0,
-  stopLoss: 0,
-  riskAmount: 0,
-  leverage: 1,
-};
+import FormRow from "../shared/form-row";
+import Buttons from "../shared/buttons";
+import { FormInputNumber } from "../shared/form-number-input";
+import {
+  defaultFormValues,
+  developmentFormValues,
+  PositionCalculatorInput,
+  positionCalculatorSchema,
+} from "./form";
+import CalculationResults from "./result";
 
 export default function PositionCalculator() {
   const form = useForm<PositionCalculatorInput>({
@@ -177,7 +121,7 @@ export default function PositionCalculator() {
                 )}
               />
             </FormRow>
-            {output && <ResultOuput output={output} />}
+            {output && <CalculationResults output={output} />}
             <Buttons onReset={onReset} />
           </form>
         </Form>
@@ -185,32 +129,3 @@ export default function PositionCalculator() {
     </Card>
   );
 }
-
-const ResultOuput = ({
-  output,
-}: {
-  output: {
-    stopLossPercentage: number;
-    actualPositionSize: number;
-    effectivePositionSize: number;
-  };
-}) => {
-  return (
-    <Output>
-      <div className="flex flex-row">
-        <div className="flex-grow">
-          <p className="text-sm font-bold">stop loss:</p>
-          <p>{percentage.format(output.stopLossPercentage)}</p>
-        </div>
-        <div className="flex-grow">
-          <p className="text-sm font-bold">margin:</p>
-          <p>{usd.format(output.actualPositionSize)}</p>
-        </div>
-        <div className="flex-grow">
-          <p className="text-sm font-bold">position size:</p>
-          <p>{usd.format(output.effectivePositionSize)}</p>
-        </div>
-      </div>
-    </Output>
-  );
-};

@@ -1,8 +1,8 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PositionCalculator from "./_calculators/position-calculator";
-import ProfitCalculator from "./_calculators/profit-calculator";
+import PositionCalculator from "./_calculators/position-size/position-calculator";
+import ProfitCalculator from "./_calculators/profit/profit-calculator";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function TabsContainer() {
