@@ -15,8 +15,6 @@ export const metadata: Metadata = {
   description:
     "calculate your trade position size, stop loss percentage and margin required.",
   manifest: "/manifest.json",
-  viewport:
-    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   keywords: ["riskmanagement", "profit", "position", "trading", "crypto"],
   openGraph: {
     title: "whatsriskmanagement",

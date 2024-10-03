@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { setTheme } from "../utils/theme-manager";
+import { setTheme } from "../../utils/theme-manager";
 
 export default function ThemeSwitcher() {
   useEffect(() => {
