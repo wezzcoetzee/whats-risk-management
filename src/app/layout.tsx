@@ -48,8 +48,10 @@ export default function RootLayout({
           <Suspense>
             <ThemeSwitcher />
             <Header />
-            <div className="pt-[90px] pb-[120px] md:pb-[80px]">{children}</div>
-            <Footer />
+            <main className="h-screen flex flex-col justify-between items-center">
+              <div className="container mt-[90px]">{children}</div>
+              <Footer />
+            </main>
           </Suspense>
         </Providers>
       </body>

@@ -24,7 +24,6 @@ export default function TabsContainer() {
     <Tabs
       defaultValue={defaultValue}
       onValueChange={(value) => updateQuery(value)}
-      className="w-[360px] sm:w-[400px] md:w-[760px]"
     >
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="profit">profit</TabsTrigger>
