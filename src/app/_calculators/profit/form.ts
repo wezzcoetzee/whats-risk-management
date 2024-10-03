@@ -74,9 +74,39 @@ const defaultFormValues: ProfitCalculatorInput = {
   takeProfitLevels: [0],
 };
 
+const formFields = [
+  [
+    {
+      name: "entryPrice",
+      title: "entry price",
+      description: "the price at which you will enter the trade.",
+    },
+    {
+      name: "stopLoss",
+      title: "stop loss",
+      description:
+        "the price at which you will exit the trade if the trade goes against you.",
+    },
+  ],
+  [
+    {
+      name: "effectivePositionSize",
+      title: "position size",
+      description: "the amount you are willing to risk/lose on this trade.",
+    },
+    {
+      name: "leverage",
+      title: "leaverage amount",
+      description:
+        "leverage is the use of borrowed capital or debt to increase the potential return on investment.",
+    },
+  ],
+];
+
 export {
   developmentFormValues,
   defaultFormValues,
   type ProfitCalculatorInput,
   profitCalculatorSchema,
+  formFields,
 };

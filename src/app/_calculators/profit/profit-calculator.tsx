@@ -15,6 +15,7 @@ import { FormInputNumber } from "../shared/form-number-input";
 import {
   defaultFormValues,
   developmentFormValues,
+  formFields,
   ProfitCalculatorInput,
   profitCalculatorSchema,
 } from "./form";
@@ -127,54 +128,30 @@ export default function ProfitCalculator() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <FormRow>
-              <FormField
-                control={form.control}
-                name="entryPrice"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="entry price"
-                    description="the price at which you will enter the trade."
-                    {...field}
+            {formFields.map((formRow, index) => (
+              <FormRow key={index}>
+                {formRow.map((input) => (
+                  <FormField
+                    key={input.name}
+                    control={form.control}
+                    name={
+                      input.name as
+                        | "entryPrice"
+                        | "stopLoss"
+                        | "effectivePositionSize"
+                        | "leverage"
+                    }
+                    render={({ field }) => (
+                      <FormInputNumber
+                        title={input.title}
+                        description={input.description as string}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stopLoss"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="stop loss"
-                    description="the price at which you will exit the trade if the trade goes against you."
-                    {...field}
-                  />
-                )}
-              />
-            </FormRow>
-            <FormRow>
-              <FormField
-                control={form.control}
-                name="effectivePositionSize"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="position size"
-                    description="the amount you are willing to risk/lose on this trade."
-                    {...field}
-                  />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="leverage"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="leaverage amount"
-                    description="leverage is the use of borrowed capital or debt to increase the potential return on investment."
-                    {...field}
-                  />
-                )}
-              />
-            </FormRow>
+                ))}
+              </FormRow>
+            ))}
             <div className="flex items-center space-x-2 justify-between">
               <div className="flex flex-row gap-4 justify-center items-center">
                 <h2>take profit</h2>

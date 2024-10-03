@@ -15,6 +15,7 @@ import {
   developmentFormValues,
   PositionCalculatorInput,
   positionCalculatorSchema,
+  formFields,
 } from "./form";
 import CalculationResults from "./result";
 
@@ -73,54 +74,30 @@ export default function PositionCalculator() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <FormRow>
-              <FormField
-                control={form.control}
-                name="entryPrice"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="entry price"
-                    description="the price at which you will enter the trade."
-                    {...field}
+            {formFields.map((formRow, index) => (
+              <FormRow key={index}>
+                {formRow.map((input) => (
+                  <FormField
+                    key={input.name}
+                    control={form.control}
+                    name={
+                      input.name as
+                        | "entryPrice"
+                        | "stopLoss"
+                        | "riskAmount"
+                        | "leverage"
+                    }
+                    render={({ field }) => (
+                      <FormInputNumber
+                        title={input.title}
+                        description={input.description as string}
+                        {...field}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stopLoss"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="stop loss"
-                    description="the price at which you will exit the trade if the trade goes against you."
-                    {...field}
-                  />
-                )}
-              />
-            </FormRow>
-            <FormRow>
-              <FormField
-                control={form.control}
-                name="riskAmount"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="risk amount"
-                    description="the amount you are willing to lose on this trade."
-                    {...field}
-                  />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="leverage"
-                render={({ field }) => (
-                  <FormInputNumber
-                    title="leaverage amount"
-                    description="leverage is the use of borrowed capital or debt to increase the potential return on investment."
-                    {...field}
-                  />
-                )}
-              />
-            </FormRow>
+                ))}
+              </FormRow>
+            ))}
             {output && <CalculationResults output={output} />}
             <Buttons onReset={onReset} />
           </form>
