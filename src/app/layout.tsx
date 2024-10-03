@@ -6,6 +6,7 @@ import { Header } from "./_header/header";
 import Script from "next/script";
 import { Suspense } from "react";
 import Footer from "./_footer/footer";
+import ThemeSwitcher from "@/app/hooks/theme-switcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default function RootLayout({
         </Script>
         <Providers>
           <Suspense>
+            <ThemeSwitcher />
             <Header />
             <div className="pt-[90px] pb-[120px] md:pb-[80px]">{children}</div>
             <Footer />

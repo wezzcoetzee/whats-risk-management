@@ -15,8 +15,8 @@ export default function TabsContainer() {
 
   const updateQuery = (value: string) => {
     const newQuery = new URLSearchParams(window.location.search);
-    newQuery.set("type", value); // Update the query parameter
-    const url = `${pathname}?${newQuery.toString()}`; // Use asPath to construct the new URL
+    newQuery.set("type", value);
+    const url = `${pathname}?${newQuery.toString()}`;
     router.push(url);
   };
 
