@@ -6,6 +6,8 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --bitcoin: 32.85, 93.2%, 53.5%;
+  --uniswap: 340 100% 49%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -49,7 +51,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --logo: 340 100% 49%;
+    --logo: var(--uniswap);
   }
   .dark {
     --background: 222.2 84% 4.9%;
@@ -76,7 +78,7 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --logo: 32.85, 93.2%, 53.5%;
+    --logo: var(--bitcoin);
   }
 }
 

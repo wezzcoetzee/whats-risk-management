@@ -23,7 +23,7 @@ export default function PositionCalculator() {
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
     defaultValues:
-      process.env.NODE_ENV === "development"
+      process.env.NODE_ENV === "test"
         ? developmentFormValues
         : defaultFormValues,
   });
@@ -88,11 +88,7 @@ export default function PositionCalculator() {
                         | "leverage"
                     }
                     render={({ field }) => (
-                      <FormInputNumber
-                        title={input.title}
-                        description={input.description as string}
-                        {...field}
-                      />
+                      <FormInputNumber title={input.title} {...field} />
                     )}
                   />
                 ))}

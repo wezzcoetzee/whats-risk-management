@@ -28,7 +28,7 @@ export default function ProfitCalculator() {
   const form = useForm<ProfitCalculatorInput>({
     resolver: zodResolver(profitCalculatorSchema),
     defaultValues:
-      process.env.NODE_ENV === "development"
+      process.env.NODE_ENV === "test"
         ? developmentFormValues
         : defaultFormValues,
   });
@@ -142,11 +142,7 @@ export default function ProfitCalculator() {
                         | "leverage"
                     }
                     render={({ field }) => (
-                      <FormInputNumber
-                        title={input.title}
-                        description={input.description as string}
-                        {...field}
-                      />
+                      <FormInputNumber title={input.title} {...field} />
                     )}
                   />
                 ))}
@@ -184,7 +180,6 @@ export default function ProfitCalculator() {
                   key={index}
                   form={form}
                   index={index}
-                  showInfo={showInfo}
                   removeTakeProfit={removeTakeProfit}
                 />
               ))}

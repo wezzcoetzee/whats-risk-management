@@ -1,10 +1,8 @@
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { ProfitCalculatorInput } from "./form";
@@ -15,12 +13,10 @@ import { Input } from "@/components/ui/input";
 export default function TakeProfitLevel({
   form,
   index,
-  showInfo,
   removeTakeProfit,
 }: {
   form: UseFormReturn<ProfitCalculatorInput>;
   index: number;
-  showInfo: boolean;
   removeTakeProfit: (index: number) => void;
 }) {
   return (
@@ -46,15 +42,7 @@ export default function TakeProfitLevel({
                 <span className="sr-only">remove take profit</span>
               </Button>
             </div>
-            <FormMessage />
           </FormItem>
-          {showInfo && (
-            <div className="flex-1">
-              <FormDescription>
-                the amount of profit you will make at this level.
-              </FormDescription>
-            </div>
-          )}
         </div>
       )}
     />

@@ -53,38 +53,27 @@ const developmentFormValues: PositionCalculatorInput = {
   leverage: 10,
 };
 
-const defaultFormValues: PositionCalculatorInput = {
-  entryPrice: 0,
-  stopLoss: 0,
-  riskAmount: 0,
-  leverage: 1,
-};
+const defaultFormValues = {};
 
 const formFields = [
   [
     {
       name: "entryPrice",
       title: "entry price",
-      description: "the price at which you will enter the trade.",
     },
     {
       name: "stopLoss",
       title: "stop loss",
-      description:
-        "the price at which you will exit the trade if the trade goes against you.",
     },
   ],
   [
     {
       name: "riskAmount",
       title: "risk amount",
-      description: "the amount you are willing to lose on this trade.",
     },
     {
       name: "leverage",
       title: "leaverage amount",
-      description:
-        "leverage is the use of borrowed capital or debt to increase the potential return on investment.",
     },
   ],
 ];
