@@ -105,12 +105,7 @@ export default function ProfitCalculator() {
   };
 
   const onReset = () => {
-    reset({
-      entryPrice: 0,
-      stopLoss: 0,
-      effectivePositionSize: 0,
-      leverage: 1,
-    });
+    reset(defaultFormValues as unknown as ProfitCalculatorInput);
     setOutput(null);
   };
 

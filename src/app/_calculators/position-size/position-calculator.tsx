@@ -25,7 +25,7 @@ export default function PositionCalculator() {
     defaultValues:
       process.env.NODE_ENV === "development"
         ? developmentFormValues
-        : defaultFormValues,
+        : (defaultFormValues as unknown as PositionCalculatorInput),
   });
 
   const { handleSubmit, reset } = form;
@@ -53,12 +53,7 @@ export default function PositionCalculator() {
   };
 
   const onReset = () => {
-    reset({
-      entryPrice: 0,
-      stopLoss: 0,
-      riskAmount: 0,
-      leverage: 1,
-    });
+    reset(defaultFormValues as unknown as PositionCalculatorInput);
     setOutput(null);
   };
 

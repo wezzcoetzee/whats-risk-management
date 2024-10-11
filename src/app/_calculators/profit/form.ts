@@ -66,7 +66,13 @@ const developmentFormValues: ProfitCalculatorInput = {
   takeProfitLevels: [59000, 62000, 69000, 72420],
 };
 
-const defaultFormValues = { takeProfitLevels: [""] };
+const defaultFormValues = {
+  entryPrice: "",
+  stopLoss: "",
+  effectivePositionSize: "",
+  leverage: "",
+  takeProfitLevels: [""],
+};
 
 const formFields = [
   [

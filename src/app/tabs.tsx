@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PositionCalculator from "./_calculators/position-size/position-calculator";
 import ProfitCalculator from "./_calculators/profit/profit-calculator";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function TabsContainer() {
   const searchParams = useSearchParams();
@@ -21,20 +22,28 @@ export default function TabsContainer() {
   };
 
   return (
-    <Tabs
-      defaultValue={defaultValue}
-      onValueChange={(value) => updateQuery(value)}
-    >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="profit">profit</TabsTrigger>
-        <TabsTrigger value="position-size">position size</TabsTrigger>
-      </TabsList>
-      <TabsContent value="profit">
-        <ProfitCalculator />
-      </TabsContent>
-      <TabsContent value="position-size">
-        <PositionCalculator />
-      </TabsContent>
-    </Tabs>
+    <Card>
+      <CardHeader>
+        <CardTitle>Calculators</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Tabs
+          className="md:min-w-[550px]"
+          defaultValue={defaultValue}
+          onValueChange={(value) => updateQuery(value)}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="profit">profit</TabsTrigger>
+            <TabsTrigger value="position-size">position size</TabsTrigger>
+          </TabsList>
+          <TabsContent value="profit">
+            <ProfitCalculator />
+          </TabsContent>
+          <TabsContent value="position-size">
+            <PositionCalculator />
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 }

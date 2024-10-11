@@ -16,6 +16,10 @@ export default function CalculationResults({
 }) {
   return (
     <Output>
+      <div className="flex flex-col">
+        <p className="text-xs font-thin">roi</p>
+        <p className="text-2xl text-green-800 font-bold">{usd.format(output.profit)}</p>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <p className="text-sm font-bold">risk/reward (r):</p>
@@ -31,10 +35,6 @@ export default function CalculationResults({
         <div>
           <p className="text-sm font-bold">margin:</p>
           <p>{usd.format(output.margin)}</p>
-        </div>
-        <div>
-          <p className="text-sm font-bold">profit:</p>
-          <p>{usd.format(output.profit)}</p>
         </div>
       </div>
       <div className="flex flex-col gap-4">

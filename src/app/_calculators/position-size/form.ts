@@ -53,7 +53,12 @@ const developmentFormValues: PositionCalculatorInput = {
   leverage: 10,
 };
 
-const defaultFormValues = {};
+const defaultFormValues = {
+  entryPrice: "",
+  stopLoss: "",
+  riskAmount: "",
+  leverage: "",
+};
 
 const formFields = [
   [
