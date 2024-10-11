@@ -4,7 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PositionCalculator from "./_calculators/position-size/position-calculator";
 import ProfitCalculator from "./_calculators/profit/profit-calculator";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 
 export default function TabsContainer() {
   const searchParams = useSearchParams();
@@ -24,7 +29,7 @@ export default function TabsContainer() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Calculators</CardTitle>
+        <CardDescription>hope it helps ♥</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs

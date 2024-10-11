@@ -16,29 +16,30 @@ export default function CalculationResults({
 }) {
   return (
     <Output>
-      <div className="flex flex-col">
-        <p className="text-xs font-thin">roi</p>
-        <p className="text-2xl text-green-800 font-bold">{usd.format(output.profit)}</p>
-      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div>
-          <p className="text-sm font-bold">risk/reward (r):</p>
-          <p>{output.tradeR.toFixed(2)}</p>
+        <div className="flex flex-col">
+          <p className="text-sm font-thin">potential roi</p>
+          <p className="text-2xl font-bold">{usd.format(output.profit)}</p>
         </div>
         <div>
-          <p className="text-sm font-bold">risk:</p>
+          <p className="text-sm font-thin">risk/reward</p>
+          <p className="text-2xl font-bold">{output.tradeR.toFixed(2)} R</p>
+        </div>
+
+        <div>
+          <p className="text-sm font-thin">potential loss</p>
           <p>
             {usd.format(output.riskAmount)} (
             {percentage.format(output.stopLossPercentage)})
           </p>
         </div>
         <div>
-          <p className="text-sm font-bold">margin:</p>
+          <p className="text-sm font-thin">margin:</p>
           <p>{usd.format(output.margin)}</p>
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <p className="text-sm font-bold">
+        <p className="text-md">
           profit at each take profit level (
           {percentage.format(output.percentageOfHoldingsSoldAtEachTakeProfit)}
           ):
@@ -46,7 +47,7 @@ export default function CalculationResults({
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {output.profitAtEachTakeProfitLevel.map((profit, index) => (
             <li key={index}>
-              <p className="text-sm font-bold">{`Take Profit ${index + 1}:`}</p>
+              <p className="text-sm font-thin">{`profit @ tp${index + 1}:`}</p>
               <p>{usd.format(profit)}</p>
             </li>
           ))}
