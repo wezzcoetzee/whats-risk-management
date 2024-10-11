@@ -23,7 +23,7 @@ export default function PositionCalculator() {
   const form = useForm<PositionCalculatorInput>({
     resolver: zodResolver(positionCalculatorSchema),
     defaultValues:
-      process.env.NODE_ENV === "test"
+      process.env.NODE_ENV === "development"
         ? developmentFormValues
         : defaultFormValues,
   });
