@@ -49,14 +49,13 @@ export function ProfitCalculator() {
       ? stopLossPrice - entryPrice 
       : entryPrice - stopLossPrice;
     
-    const potentialLoss = Math.abs(priceDifference * positionSizeValue);
-    const margin = positionSizeValue / leverageValue;
+    const potentialLoss = Math.abs((priceDifference / entryPrice) * positionSizeValue * leverageValue);
 
     const calculateProfitAtPrice = (targetPrice: number) => {
       const priceDiff = tradeType === "LONG" 
         ? targetPrice - entryPrice 
         : entryPrice - targetPrice;
-      return priceDiff * positionSizeValue;
+      return (priceDiff / entryPrice) * positionSizeValue * leverageValue;
     };
 
     const profits = {
@@ -66,6 +65,7 @@ export function ProfitCalculator() {
       tp4: tp4Price ? calculateProfitAtPrice(tp4Price) : 0,
     };
 
+    const margin = positionSizeValue / leverageValue;
     const roi = (profits.tp1 / margin) * 100;
     const riskReward = profits.tp1 / potentialLoss;
 
