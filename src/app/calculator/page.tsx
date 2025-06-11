@@ -16,7 +16,7 @@ export default function CalculatorPage() {
   const [calculatorType, setCalculatorType] = useState<string>("profit");
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 max-w-md">
       <h1 className="text-3xl font-bold mb-8">Risk Management Calculator</h1>
       
       <div className="mb-6">
