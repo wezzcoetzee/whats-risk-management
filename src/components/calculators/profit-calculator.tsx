@@ -16,6 +16,64 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+const defaultFormValues = {
+  default: {
+    tradeType: "LONG" as const,
+    entry: "",
+    leverage: "",
+    stopLoss: "",
+    positionSize: "",
+    tp1: "",
+    tp2: "",
+    tp3: "",
+    tp4: "",
+  },
+  long_success: {
+    tradeType: "LONG" as const,
+    entry: "100",
+    leverage: "2",
+    stopLoss: "90",
+    positionSize: "1000",
+    tp1: "110",
+    tp2: "120",
+    tp3: "130",
+    tp4: "140",
+  },
+  short_success: {
+    tradeType: "SHORT" as const,
+    entry: "100",
+    leverage: "2",
+    stopLoss: "110",
+    positionSize: "1000",
+    tp1: "90",
+    tp2: "80",
+    tp3: "70",
+    tp4: "60",
+  },
+  long_error: {
+    tradeType: "LONG" as const,
+    entry: "100",
+    leverage: "2",
+    stopLoss: "110",
+    positionSize: "1000",
+    tp1: "80",
+    tp2: "120",
+    tp3: "140",
+    tp4: "160",
+  },
+  short_error: {
+    tradeType: "SHORT" as const,
+    entry: "100",
+    leverage: "2",
+    stopLoss: "90",
+    positionSize: "1000",
+    tp1: "120",
+    tp2: "90",
+    tp3: "80",
+    tp4: "60",
+  },
+}
+
 const profitCalculatorSchema = z.object({
   tradeType: z.enum(["LONG", "SHORT"]),
   entry: z.string()
@@ -90,6 +148,7 @@ type ProfitCalculatorForm = z.infer<typeof profitCalculatorSchema>;
 interface ProfitResults {
   roi: number;
   riskReward: number;
+  averageRiskReward: number;
   potentialLoss: number;
   profits: {
     tp1: number;
@@ -97,6 +156,8 @@ interface ProfitResults {
     tp3: number;
     tp4: number;
   };
+  averageTakeProfit: number;
+  margin: number;
 }
 
 export function ProfitCalculator() {
@@ -104,17 +165,7 @@ export function ProfitCalculator() {
 
   const form = useForm<ProfitCalculatorForm>({
     resolver: zodResolver(profitCalculatorSchema),
-    defaultValues: {
-      tradeType: "LONG",
-      entry: "",
-      leverage: "",
-      stopLoss: "",
-      positionSize: "",
-      tp1: "",
-      tp2: "",
-      tp3: "",
-      tp4: "",
-    },
+    defaultValues: defaultFormValues.default,
   });
 
   const calculateProfit = (data: ProfitCalculatorForm) => {
@@ -147,27 +198,38 @@ export function ProfitCalculator() {
       tp4: tp4Price ? calculateProfitAtPrice(tp4Price) : 0,
     };
 
+    const takeProfitLevels = [parseInt(data.tp1), parseInt(data.tp2 ?? "0"), parseInt(data.tp3 ?? "0"),parseInt(data.tp4 ?? "0")].filter(tp => tp > 0);
+    const maxTakeProfit = Math.max(...takeProfitLevels);
+    const averageTakeProfit = takeProfitLevels.reduce((acc, curr) => acc + curr, 0) / takeProfitLevels.length;
+
+    const takeProfits = [profits.tp1, profits.tp2, profits.tp3, profits.tp4].filter(tp => tp > 0);
+    const totalProfit = takeProfits.reduce((acc, curr) => acc + curr, 0);
+
     const margin = positionSizeValue / leverageValue;
-    const roi = (profits.tp1 / margin) * 100;
-    const riskReward = profits.tp1 / potentialLoss;
+    const roi = (totalProfit / margin) * 100;
+    const riskReward = maxTakeProfit / potentialLoss;
+    const averageRiskReward = averageTakeProfit / potentialLoss;
 
     setResults({
       roi,
       riskReward,
+      averageRiskReward,
       potentialLoss,
       profits,
+      averageTakeProfit,
+      margin
     });
   };
 
   return (
     <Form {...form}>
-      <div className="space-y-6">
-        <div className="space-y-4">
+      <div className="space-y-12">
+        <div className="space-y-10">
           <FormField
             control={form.control}
             name="tradeType"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="min-h-[80px]">
                 <FormLabel>Trade Type</FormLabel>
                 <FormControl>
                   <RadioGroup
@@ -195,12 +257,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="entry"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Entry Price</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -209,12 +271,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="leverage"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Leverage</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="1x" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -223,12 +285,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="stopLoss"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Stop Loss</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -237,12 +299,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="positionSize"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Position Size</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -253,12 +315,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="tp1"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Take Profit 1</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -267,12 +329,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="tp2"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Take Profit 2</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -281,12 +343,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="tp3"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Take Profit 3</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -295,12 +357,12 @@ export function ProfitCalculator() {
               control={form.control}
               name="tp4"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Take Profit 4</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="0.00" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="mt-1" />
                 </FormItem>
               )}
             />
@@ -324,25 +386,49 @@ export function ProfitCalculator() {
                 <p className="text-lg font-medium">{results.riskReward.toFixed(2)}</p>
               </div>
               <div>
+                <p className="text-sm text-gray-500">Average Risk/Reward</p>
+                <p className="text-lg font-medium">{results.averageRiskReward.toFixed(2)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Average Take Profit</p>
+                <p className="text-lg font-medium">${results.averageTakeProfit.toFixed(2)}</p>
+              </div>
+              <div>
                 <p className="text-sm text-gray-500">Potential Loss</p>
                 <p className="text-lg font-medium">${results.potentialLoss.toFixed(2)}</p>
               </div>
+              <div>
+                <p className="text-sm text-gray-500">Margin</p>
+                <p className="text-lg font-medium">${results.margin.toFixed(2)}</p>
+              </div>
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-2">Profits at Take Profit Levels</p>
+              <p className="text-sm text-gray-500 mb-3">Profits at Take Profit Levels</p>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm">TP1: ${results.profits.tp1.toFixed(2)}</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
+                    <span className="text-sm font-medium">TP1</span>
+                    <span className="text-sm font-medium text-green-600">${results.profits.tp1.toFixed(2)}</span>
+                  </div>
                   {results.profits.tp2 !== 0 && (
-                    <p className="text-sm">TP2: ${results.profits.tp2.toFixed(2)}</p>
+                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
+                      <span className="text-sm font-medium">TP2</span>
+                      <span className="text-sm font-medium text-green-600">${results.profits.tp2.toFixed(2)}</span>
+                    </div>
                   )}
                 </div>
-                <div>
+                <div className="space-y-2">
                   {results.profits.tp3 !== 0 && (
-                    <p className="text-sm">TP3: ${results.profits.tp3.toFixed(2)}</p>
+                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
+                      <span className="text-sm font-medium">TP3</span>
+                      <span className="text-sm font-medium text-green-600">${results.profits.tp3.toFixed(2)}</span>
+                    </div>
                   )}
                   {results.profits.tp4 !== 0 && (
-                    <p className="text-sm">TP4: ${results.profits.tp4.toFixed(2)}</p>
+                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
+                      <span className="text-sm font-medium">TP4</span>
+                      <span className="text-sm font-medium text-green-600">${results.profits.tp4.toFixed(2)}</span>
+                    </div>
                   )}
                 </div>
               </div>
