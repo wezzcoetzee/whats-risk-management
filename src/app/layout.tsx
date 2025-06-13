@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "What's Risk Management?",
-  description: "Learn more about how to trade safely and make money",
+  description: "Learn more about how to trade safely and efficiently",
 };
 
 export default function RootLayout({
