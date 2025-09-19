@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { TrendingUp, Calculator, Shield, DollarSign, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,211 +16,136 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  calculateProfitMetrics,
+  validateTradingParameters,
+  formatCurrency,
+  formatPercentage,
+  safeParseFloat,
+  type ProfitCalculationResult
+} from "@/lib/calculations";
 
+// Default form values
 const defaultFormValues = {
-  default: {
-    tradeType: "LONG" as const,
-    entry: "",
-    leverage: "",
-    stopLoss: "",
-    positionSize: "",
-    tp1: "",
-    tp2: "",
-    tp3: "",
-    tp4: "",
-  },
-  long_success: {
-    tradeType: "LONG" as const,
-    entry: "100",
-    leverage: "2",
-    stopLoss: "90",
-    positionSize: "1000",
-    tp1: "110",
-    tp2: "120",
-    tp3: "130",
-    tp4: "140",
-  },
-  short_success: {
-    tradeType: "SHORT" as const,
-    entry: "100",
-    leverage: "2",
-    stopLoss: "110",
-    positionSize: "1000",
-    tp1: "90",
-    tp2: "80",
-    tp3: "70",
-    tp4: "60",
-  },
-  long_error: {
-    tradeType: "LONG" as const,
-    entry: "100",
-    leverage: "2",
-    stopLoss: "110",
-    positionSize: "1000",
-    tp1: "80",
-    tp2: "120",
-    tp3: "140",
-    tp4: "160",
-  },
-  short_error: {
-    tradeType: "SHORT" as const,
-    entry: "100",
-    leverage: "2",
-    stopLoss: "90",
-    positionSize: "1000",
-    tp1: "120",
-    tp2: "90",
-    tp3: "80",
-    tp4: "60",
-  },
-}
+  tradeType: "LONG" as const,
+  entry: "",
+  leverage: "",
+  stopLoss: "",
+  positionSize: "",
+  tp1: "",
+  tp2: "",
+  tp3: "",
+  tp4: "",
+};
 
 const profitCalculatorSchema = z.object({
   tradeType: z.enum(["LONG", "SHORT"]),
   entry: z.string()
     .min(1, "Entry price is required")
-    .refine((val) => !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => parseFloat(val) > 0, "Entry price must be greater than 0"),
+    .refine((val) => !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => safeParseFloat(val) > 0, "Entry price must be greater than 0")
+    .refine((val) => safeParseFloat(val) < 1000000, "Entry price too large"),
   leverage: z.string()
     .min(1, "Leverage is required")
-    .refine((val) => !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => parseFloat(val) > 0, "Leverage must be greater than 0"),
+    .refine((val) => !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => safeParseFloat(val) >= 1, "Leverage must be at least 1x")
+    .refine((val) => safeParseFloat(val) <= 100, "Leverage cannot exceed 100x"),
   stopLoss: z.string()
     .min(1, "Stop loss is required")
-    .refine((val) => !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => parseFloat(val) > 0, "Stop loss must be greater than 0"),
+    .refine((val) => !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => safeParseFloat(val) > 0, "Stop loss must be greater than 0")
+    .refine((val) => safeParseFloat(val) < 1000000, "Stop loss price too large"),
   positionSize: z.string()
     .min(1, "Position size is required")
-    .refine((val) => !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => parseFloat(val) > 0, "Position size must be greater than 0"),
+    .refine((val) => !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => safeParseFloat(val) > 0, "Position size must be greater than 0")
+    .refine((val) => safeParseFloat(val) < 10000000, "Position size too large"),
   tp1: z.string()
     .min(1, "Take profit 1 is required")
-    .refine((val) => !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => parseFloat(val) > 0, "Take profit 1 must be greater than 0"),
+    .refine((val) => !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => safeParseFloat(val) > 0, "Take profit 1 must be greater than 0")
+    .refine((val) => safeParseFloat(val) < 1000000, "Take profit 1 price too large"),
   tp2: z.string()
     .optional()
-    .refine((val) => !val || !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => !val || parseFloat(val) > 0, "Take profit 2 must be greater than 0"),
+    .refine((val) => !val || !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => !val || safeParseFloat(val) > 0, "Take profit 2 must be greater than 0")
+    .refine((val) => !val || safeParseFloat(val) < 1000000, "Take profit 2 price too large"),
   tp3: z.string()
     .optional()
-    .refine((val) => !val || !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => !val || parseFloat(val) > 0, "Take profit 3 must be greater than 0"),
+    .refine((val) => !val || !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => !val || safeParseFloat(val) > 0, "Take profit 3 must be greater than 0")
+    .refine((val) => !val || safeParseFloat(val) < 1000000, "Take profit 3 price too large"),
   tp4: z.string()
     .optional()
-    .refine((val) => !val || !isNaN(parseFloat(val)), "Must be a valid number")
-    .refine((val) => !val || parseFloat(val) > 0, "Take profit 4 must be greater than 0"),
+    .refine((val) => !val || !isNaN(safeParseFloat(val)), "Must be a valid number")
+    .refine((val) => !val || safeParseFloat(val) > 0, "Take profit 4 must be greater than 0")
+    .refine((val) => !val || safeParseFloat(val) < 1000000, "Take profit 4 price too large"),
 }).refine((data) => {
-  const entry = parseFloat(data.entry);
-  const stopLoss = parseFloat(data.stopLoss);
-  const tp1 = parseFloat(data.tp1);
-  const tp2 = data.tp2 ? parseFloat(data.tp2) : null;
-  const tp3 = data.tp3 ? parseFloat(data.tp3) : null;
-  const tp4 = data.tp4 ? parseFloat(data.tp4) : null;
-
-  if (data.tradeType === "LONG") {
-    // For long positions:
-    // - Stop loss must be below entry
-    // - Take profits must be above entry
-    // - Take profits must be in ascending order
-    if (stopLoss >= entry) return false;
-    if (tp1 <= entry) return false;
-    if (tp2 !== null && tp2 <= tp1) return false;
-    if (tp3 !== null && tp3 <= (tp2 ?? tp1)) return false;
-    if (tp4 !== null && tp4 <= (tp3 ?? tp2 ?? tp1)) return false;
-  } else {
-    // For short positions:
-    // - Stop loss must be above entry
-    // - Take profits must be below entry
-    // - Take profits must be in descending order
-    if (stopLoss <= entry) return false;
-    if (tp1 >= entry) return false;
-    if (tp2 !== null && tp2 >= tp1) return false;
-    if (tp3 !== null && tp3 >= (tp2 ?? tp1)) return false;
-    if (tp4 !== null && tp4 >= (tp3 ?? tp2 ?? tp1)) return false;
-  }
-  return true;
+  const entry = safeParseFloat(data.entry);
+  const stopLoss = safeParseFloat(data.stopLoss);
+  const takeProfits = [
+    safeParseFloat(data.tp1),
+    data.tp2 ? safeParseFloat(data.tp2) : 0,
+    data.tp3 ? safeParseFloat(data.tp3) : 0,
+    data.tp4 ? safeParseFloat(data.tp4) : 0,
+  ].filter(tp => tp > 0);
+  
+  const validation = validateTradingParameters(data.tradeType, entry, stopLoss, takeProfits);
+  return validation.isValid;
 }, {
   message: "Invalid price levels for the selected trade type",
-  path: ["entry"], // This will show the error on the entry field
+  path: ["tp1"],
 });
 
 type ProfitCalculatorForm = z.infer<typeof profitCalculatorSchema>;
 
-interface ProfitResults {
-  roi: number;
-  riskReward: number;
-  averageRiskReward: number;
-  potentialLoss: number;
-  profits: {
-    tp1: number;
-    tp2: number;
-    tp3: number;
-    tp4: number;
-  };
-  averageTakeProfit: number;
-  margin: number;
-}
+type ProfitResults = ProfitCalculationResult;
 
 export function ProfitCalculator() {
   const [results, setResults] = useState<ProfitResults | null>(null);
 
   const form = useForm<ProfitCalculatorForm>({
     resolver: zodResolver(profitCalculatorSchema),
-    defaultValues: defaultFormValues.default,
+    defaultValues: defaultFormValues,
   });
 
-  const calculateProfit = (data: ProfitCalculatorForm) => {
-    const entryPrice = parseFloat(data.entry);
-    const leverageValue = parseFloat(data.leverage);
-    const stopLossPrice = parseFloat(data.stopLoss);
-    const positionSizeValue = parseFloat(data.positionSize);
-    const tp1Price = parseFloat(data.tp1);
-    const tp2Price = data.tp2 ? parseFloat(data.tp2) : 0;
-    const tp3Price = data.tp3 ? parseFloat(data.tp3) : 0;
-    const tp4Price = data.tp4 ? parseFloat(data.tp4) : 0;
-
-    const priceDifference = data.tradeType === "LONG" 
-      ? stopLossPrice - entryPrice 
-      : entryPrice - stopLossPrice;
-    
-    const potentialLoss = Math.abs((priceDifference / entryPrice) * positionSizeValue * leverageValue);
-
-    const calculateProfitAtPrice = (targetPrice: number) => {
-      const priceDiff = data.tradeType === "LONG" 
-        ? targetPrice - entryPrice 
-        : entryPrice - targetPrice;
-      return (priceDiff / entryPrice) * positionSizeValue * leverageValue;
-    };
-
-    const profits = {
-      tp1: calculateProfitAtPrice(tp1Price),
-      tp2: tp2Price ? calculateProfitAtPrice(tp2Price) : 0,
-      tp3: tp3Price ? calculateProfitAtPrice(tp3Price) : 0,
-      tp4: tp4Price ? calculateProfitAtPrice(tp4Price) : 0,
-    };
-
-    const takeProfitLevels = [parseInt(data.tp1), parseInt(data.tp2 ?? "0"), parseInt(data.tp3 ?? "0"),parseInt(data.tp4 ?? "0")].filter(tp => tp > 0);
-    const maxTakeProfit = Math.max(...takeProfitLevels);
-    const averageTakeProfit = takeProfitLevels.reduce((acc, curr) => acc + curr, 0) / takeProfitLevels.length;
-
-    const takeProfits = [profits.tp1, profits.tp2, profits.tp3, profits.tp4].filter(tp => tp > 0);
-    const totalProfit = takeProfits.reduce((acc, curr) => acc + curr, 0);
-
-    const margin = positionSizeValue / leverageValue;
-    const roi = (totalProfit / margin) * 100;
-    const riskReward = maxTakeProfit / potentialLoss;
-    const averageRiskReward = averageTakeProfit / potentialLoss;
-
-    setResults({
-      roi,
-      riskReward,
-      averageRiskReward,
-      potentialLoss,
-      profits,
-      averageTakeProfit,
-      margin
-    });
-  };
+  const handleCalculateProfit = useCallback((data: ProfitCalculatorForm) => {
+    try {
+      const input = {
+        tradeType: data.tradeType,
+        entryPrice: safeParseFloat(data.entry),
+        stopLossPrice: safeParseFloat(data.stopLoss),
+        leverage: safeParseFloat(data.leverage),
+        positionSize: safeParseFloat(data.positionSize),
+        takeProfits: [
+          safeParseFloat(data.tp1),
+          data.tp2 ? safeParseFloat(data.tp2) : 0,
+          data.tp3 ? safeParseFloat(data.tp3) : 0,
+          data.tp4 ? safeParseFloat(data.tp4) : 0,
+        ],
+      };
+      
+      // Validate parameters
+      const validation = validateTradingParameters(
+        input.tradeType,
+        input.entryPrice,
+        input.stopLossPrice,
+        input.takeProfits.filter(tp => tp > 0)
+      );
+      
+      if (!validation.isValid) {
+        console.error('Validation errors:', validation.errors);
+        return;
+      }
+      
+      const result = calculateProfitMetrics(input);
+      setResults(result);
+      
+    } catch (error) {
+      console.error('Calculation error:', error);
+      setResults(null);
+    }
+  }, []);
 
   return (
     <Form {...form}>
@@ -258,9 +184,19 @@ export function ProfitCalculator() {
               name="entry"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Entry Price</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <TrendingUp className="h-4 w-4 text-primary" />
+                    Entry Price
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -272,9 +208,20 @@ export function ProfitCalculator() {
               name="leverage"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Leverage</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Calculator className="h-4 w-4 text-primary" />
+                    Leverage
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="1x" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="1" 
+                      step="0.1"
+                      min="1"
+                      max="100"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -286,9 +233,19 @@ export function ProfitCalculator() {
               name="stopLoss"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Stop Loss</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Shield className="h-4 w-4 text-destructive" />
+                    Stop Loss
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -300,9 +257,19 @@ export function ProfitCalculator() {
               name="positionSize"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Position Size</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <DollarSign className="h-4 w-4 text-green-600" />
+                    Position Size
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="1000.00" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -316,9 +283,19 @@ export function ProfitCalculator() {
               name="tp1"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Take Profit 1</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Target className="h-4 w-4 text-green-600" />
+                    Take Profit 1 *
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -330,9 +307,19 @@ export function ProfitCalculator() {
               name="tp2"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Take Profit 2</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Target className="h-4 w-4 text-green-600" />
+                    Take Profit 2
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00 (optional)" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -344,9 +331,19 @@ export function ProfitCalculator() {
               name="tp3"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Take Profit 3</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Target className="h-4 w-4 text-green-600" />
+                    Take Profit 3
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00 (optional)" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -358,9 +355,19 @@ export function ProfitCalculator() {
               name="tp4"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Take Profit 4</FormLabel>
+                  <FormLabel className="flex items-center gap-2 text-base font-medium">
+                    <Target className="h-4 w-4 text-green-600" />
+                    Take Profit 4
+                  </FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="0.00" {...field} />
+                    <Input 
+                      type="number" 
+                      placeholder="0.00 (optional)" 
+                      step="0.01"
+                      min="0"
+                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage className="mt-1" />
                 </FormItem>
@@ -368,71 +375,98 @@ export function ProfitCalculator() {
             />
           </div>
 
-          <Button type="submit" className="w-full" onClick={form.handleSubmit(calculateProfit)}>
-            Calculate
+          <Button 
+            type="submit" 
+            className="w-full h-12 text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-200" 
+            onClick={form.handleSubmit(handleCalculateProfit)}
+          >
+            <Calculator className="mr-2 h-4 w-4" />
+            Calculate Profit Metrics
           </Button>
         </div>
 
         {results && (
-          <div className="mt-6 p-4 border rounded-lg space-y-4">
-            <h3 className="text-lg font-semibold">Results</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">ROI</p>
-                <p className="text-lg font-medium">{results.roi.toFixed(2)}%</p>
+          <div className="mt-8 p-6 border rounded-xl bg-gradient-to-br from-background to-muted/20 space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-primary" />
               </div>
-              <div>
-                <p className="text-sm text-gray-500">Risk/Reward</p>
-                <p className="text-lg font-medium">{results.riskReward.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Average Risk/Reward</p>
-                <p className="text-lg font-medium">{results.averageRiskReward.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Average Take Profit</p>
-                <p className="text-lg font-medium">${results.averageTakeProfit.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Potential Loss</p>
-                <p className="text-lg font-medium">${results.potentialLoss.toFixed(2)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Margin</p>
-                <p className="text-lg font-medium">${results.margin.toFixed(2)}</p>
-              </div>
+              <h3 className="text-xl font-semibold">Profit Analysis Results</h3>
             </div>
-            <div>
-              <p className="text-sm text-gray-500 mb-3">Profits at Take Profit Levels</p>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
-                    <span className="text-sm font-medium">TP1</span>
-                    <span className="text-sm font-medium text-green-600">${results.profits.tp1.toFixed(2)}</span>
-                  </div>
-                  {results.profits.tp2 !== 0 && (
-                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
-                      <span className="text-sm font-medium">TP2</span>
-                      <span className="text-sm font-medium text-green-600">${results.profits.tp2.toFixed(2)}</span>
-                    </div>
-                  )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Return on Investment</p>
+                  <p className="text-2xl font-bold text-green-600">{formatPercentage(results.roi)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Average profit vs margin</p>
                 </div>
-                <div className="space-y-2">
-                  {results.profits.tp3 !== 0 && (
-                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
-                      <span className="text-sm font-medium">TP3</span>
-                      <span className="text-sm font-medium text-green-600">${results.profits.tp3.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {results.profits.tp4 !== 0 && (
-                    <div className="flex justify-between items-center p-2 bg-gray-900 rounded-md">
-                      <span className="text-sm font-medium">TP4</span>
-                      <span className="text-sm font-medium text-green-600">${results.profits.tp4.toFixed(2)}</span>
-                    </div>
-                  )}
+                
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Primary Risk/Reward</p>
+                  <p className="text-2xl font-bold text-blue-600">{results.riskReward.toFixed(2)}:1</p>
+                  <p className="text-xs text-muted-foreground mt-1">First take profit vs max loss</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Average Profit</p>
+                  <p className="text-2xl font-bold text-green-600">{formatCurrency(results.averageProfit)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Per take profit level</p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Margin Required</p>
+                  <p className="text-2xl font-bold text-blue-600">{formatCurrency(results.margin)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Capital needed for position</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Average Risk/Reward</p>
+                  <p className="text-2xl font-bold text-purple-600">{results.averageRiskReward.toFixed(2)}:1</p>
+                  <p className="text-xs text-muted-foreground mt-1">Average profit vs max loss</p>
+                </div>
+                
+                <div className="p-4 rounded-lg bg-card border">
+                  <p className="text-sm text-muted-foreground font-medium">Maximum Loss</p>
+                  <p className="text-2xl font-bold text-destructive">{formatCurrency(results.potentialLoss)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Risk if stop loss hit</p>
                 </div>
               </div>
             </div>
+            
+            {results.profits.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Target className="h-5 w-5 text-green-600" />
+                  <h4 className="text-lg font-semibold">Individual Take Profit Levels</h4>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {results.profits.map((profit, index) => {
+                    if (profit <= 0) return null;
+                    return (
+                      <div 
+                        key={index}
+                        className="flex justify-between items-center p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-green-600 text-white text-sm font-bold flex items-center justify-center">
+                            {index + 1}
+                          </div>
+                          <span className="font-medium">Take Profit {index + 1}</span>
+                        </div>
+                        <span className="text-lg font-bold text-green-700 dark:text-green-400">
+                          {formatCurrency(profit)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
