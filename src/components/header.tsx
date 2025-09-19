@@ -17,9 +17,6 @@ export function Header() {
             Risk Management
           </Link>
           <div className="flex items-center gap-6">
-            <Link href="/" className="hover:text-gray-600 transition-colors">
-              Home
-            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 hover:text-gray-600 transition-colors">
                 <Calculator className="h-4 w-4" />
@@ -27,15 +24,6 @@ export function Header() {
                 <ChevronDown className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuItem asChild>
-                  <Link href="/calculator?type=profit" className="flex items-center gap-3 w-full">
-                    <Target className="h-4 w-4 text-green-600" />
-                    <div>
-                      <div className="font-medium">Profit Calculator</div>
-                      <div className="text-sm text-muted-foreground">Analyze potential profits</div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/calculator?type=position" className="flex items-center gap-3 w-full">
                     <Shield className="h-4 w-4 text-blue-600" />
@@ -46,14 +34,14 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/calculator" className="flex items-center gap-3 w-full">
-                    <Calculator className="h-4 w-4 text-primary" />
+                  <Link href="/calculator?type=profit" className="flex items-center gap-3 w-full">
+                    <Target className="h-4 w-4 text-green-600" />
                     <div>
-                      <div className="font-medium">All Calculators</div>
-                      <div className="text-sm text-muted-foreground">View calculator suite</div>
+                      <div className="font-medium">Profit Calculator</div>
+                      <div className="text-sm text-muted-foreground">Analyze potential profits</div>
                     </div>
                   </Link>
-                </DropdownMenuItem>
+                </DropdownMenuItem>          
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />

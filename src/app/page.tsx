@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Calculator, TrendingUp, Shield, Target } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
@@ -28,13 +27,6 @@ export default function Home() {
             <p className="text-lg md:text-xl text-muted-foreground max-w-[700px] mx-auto leading-relaxed">
               Master your trading strategy with professional-grade calculators. Calculate optimal position sizes, analyze profit potential, and manage risk like a pro trader.
             </p>
-          </div>
-          
-          {/* Status indicator */}
-          <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-            <span className="text-sm font-medium">Ready to calculate</span>
-            <div className="h-2 w-2 animate-pulse rounded-full bg-primary delay-75" />
           </div>
         </div>
 
@@ -111,20 +103,6 @@ export default function Home() {
               </CardContent>
             </Card>
           </Link>
-        </div>
-
-        {/* CTA Section */}
-        <div className="text-center space-y-6">
-          <Button asChild size="lg" className="h-12 px-8 text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-200">
-            <Link href="/calculator" className="flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Start Calculating
-            </Link>
-          </Button>
-          
-          <p className="text-sm text-muted-foreground">
-            Professional-grade tools used by traders worldwide
-          </p>
         </div>
 
         {/* Key Benefits */}

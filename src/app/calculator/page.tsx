@@ -1,19 +1,13 @@
 "use client";
 
-import { Calculator, TrendingUp, Shield, Target } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { Calculator, TrendingUp, } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfitCalculator } from "@/components/calculators/profit-calculator";
 import { PositionSizeCalculator } from "@/components/calculators/position-size-calculator";
 import { useCalculatorSelection, getCalculatorMetadata } from "@/hooks/use-calculator-selection";
 
 export default function CalculatorPage() {
-  const { calculatorType, setCalculatorType, isInitialized } = useCalculatorSelection();
+  const { calculatorType, isInitialized } = useCalculatorSelection();
   const currentCalculator = getCalculatorMetadata(calculatorType);
 
   // Show loading state while initializing
@@ -48,44 +42,6 @@ export default function CalculatorPage() {
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Professional risk management tools to optimize your trading strategy and protect your capital.
             </p>
-          </div>
-          
-          {/* Status indicator */}
-          <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-            <span className="text-sm font-medium">Calculator ready</span>
-            <div className="h-2 w-2 animate-pulse rounded-full bg-primary delay-75" />
-          </div>
-        </div>
-
-        {/* Calculator Type Selector */}
-        <div className="mb-8 flex justify-center">
-          <div className="bg-background/50 backdrop-blur-sm border rounded-xl p-2">
-            <Select
-              value={calculatorType}
-              onValueChange={setCalculatorType}
-            >
-              <SelectTrigger className="w-[300px] h-12 text-base bg-transparent border-0 focus:ring-0">
-                <div className="flex items-center gap-2">
-                  <currentCalculator.icon className={`h-4 w-4 ${currentCalculator.color}`} />
-                  <span>{currentCalculator.title}</span>
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="profit" className="text-base">
-                  <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-green-600" />
-                    <span>Profit Calculator</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="position" className="text-base">
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-blue-600" />
-                    <span>Position Size Calculator</span>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
