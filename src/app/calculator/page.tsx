@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { Calculator, TrendingUp, } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfitCalculator } from "@/components/calculators/profit-calculator";
 import { PositionSizeCalculator } from "@/components/calculators/position-size-calculator";
 import { useCalculatorSelection, getCalculatorMetadata } from "@/hooks/use-calculator-selection";
 
-export default function CalculatorPage() {
+function CalculatorContent() {
   const { calculatorType, isInitialized } = useCalculatorSelection();
   const currentCalculator = getCalculatorMetadata(calculatorType);
 
@@ -78,5 +79,19 @@ export default function CalculatorPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function CalculatorPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto py-8 px-4 max-w-4xl relative">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
+        </div>
+      </div>
+    }>
+      <CalculatorContent />
+    </Suspense>
   );
 } 
