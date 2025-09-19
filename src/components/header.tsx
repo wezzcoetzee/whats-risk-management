@@ -1,5 +1,12 @@
 import Link from "next/link";
+import { ChevronDown, Calculator, Shield, Target } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   return (
@@ -13,9 +20,42 @@ export function Header() {
             <Link href="/" className="hover:text-gray-600 transition-colors">
               Home
             </Link>
-            <Link href="/calculator" className="hover:text-gray-600 transition-colors">
-              Calculators
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 hover:text-gray-600 transition-colors">
+                <Calculator className="h-4 w-4" />
+                Calculators
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuItem asChild>
+                  <Link href="/calculator?type=profit" className="flex items-center gap-3 w-full">
+                    <Target className="h-4 w-4 text-green-600" />
+                    <div>
+                      <div className="font-medium">Profit Calculator</div>
+                      <div className="text-sm text-muted-foreground">Analyze potential profits</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/calculator?type=position" className="flex items-center gap-3 w-full">
+                    <Shield className="h-4 w-4 text-blue-600" />
+                    <div>
+                      <div className="font-medium">Position Size Calculator</div>
+                      <div className="text-sm text-muted-foreground">Calculate optimal position size</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/calculator" className="flex items-center gap-3 w-full">
+                    <Calculator className="h-4 w-4 text-primary" />
+                    <div>
+                      <div className="font-medium">All Calculators</div>
+                      <div className="text-sm text-muted-foreground">View calculator suite</div>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <ThemeToggle />
           </div>
         </nav>

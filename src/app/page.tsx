@@ -40,65 +40,77 @@ export default function Home() {
 
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl w-full mb-12">
-          <Card className="group hover:shadow-lg transition-all duration-200 border-border/50 bg-background/50 backdrop-blur-sm">
-            <CardHeader className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                  <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <Link href="/calculator?type=position">
+            <Card className="group hover:shadow-lg transition-all duration-200 border-border/50 bg-background/50 backdrop-blur-sm cursor-pointer h-full">
+              <CardHeader className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+                    <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <CardTitle className="text-xl">Position Size Calculator</CardTitle>
                 </div>
-                <CardTitle className="text-xl">Position Size Calculator</CardTitle>
-              </div>
-              <CardDescription className="text-base">
-                Calculate the optimal position size based on your risk tolerance and stop loss levels. Never risk more than you can afford to lose.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                  Risk-based position sizing
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                  Leverage consideration
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                  Margin requirements
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+                <CardDescription className="text-base">
+                  Calculate the optimal position size based on your risk tolerance and stop loss levels. Never risk more than you can afford to lose.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                    Risk-based position sizing
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                    Leverage consideration
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                    Margin requirements
+                  </li>
+                </ul>
+                <div className="mt-4 text-sm text-primary font-medium flex items-center gap-2">
+                  <span>Try now</span>
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="group hover:shadow-lg transition-all duration-200 border-border/50 bg-background/50 backdrop-blur-sm">
-            <CardHeader className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
-                  <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
+          <Link href="/calculator?type=profit">
+            <Card className="group hover:shadow-lg transition-all duration-200 border-border/50 bg-background/50 backdrop-blur-sm cursor-pointer h-full">
+              <CardHeader className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
+                    <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <CardTitle className="text-xl">Profit Calculator</CardTitle>
                 </div>
-                <CardTitle className="text-xl">Profit Calculator</CardTitle>
-              </div>
-              <CardDescription className="text-base">
-                Analyze potential profits across multiple take profit levels. Calculate ROI, risk/reward ratios, and total profit potential.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Multi-level take profits
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  ROI analysis
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                  Risk/reward ratios
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+                <CardDescription className="text-base">
+                  Analyze potential profits across multiple take profit levels. Calculate ROI, risk/reward ratios, and total profit potential.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    Multi-level take profits
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    ROI analysis
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    Risk/reward ratios
+                  </li>
+                </ul>
+                <div className="mt-4 text-sm text-primary font-medium flex items-center gap-2">
+                  <span>Try now</span>
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* CTA Section */}

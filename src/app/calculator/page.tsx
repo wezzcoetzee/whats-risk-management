@@ -1,20 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import { Calculator, TrendingUp, Shield, Target } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfitCalculator } from "@/components/calculators/profit-calculator";
 import { PositionSizeCalculator } from "@/components/calculators/position-size-calculator";
+import { useCalculatorSelection, getCalculatorMetadata } from "@/hooks/use-calculator-selection";
 
 export default function CalculatorPage() {
-  const [calculatorType, setCalculatorType] = useState<string>("profit");
+  const { calculatorType, setCalculatorType, isInitialized } = useCalculatorSelection();
+  const currentCalculator = getCalculatorMetadata(calculatorType);
+
+  // Show loading state while initializing
+  if (!isInitialized) {
+    return (
+      <div className="container mx-auto py-8 px-4 max-w-4xl relative">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -56,7 +67,8 @@ export default function CalculatorPage() {
             >
               <SelectTrigger className="w-[300px] h-12 text-base bg-transparent border-0 focus:ring-0">
                 <div className="flex items-center gap-2">
-                  <SelectValue placeholder="Select calculator type" />
+                  <currentCalculator.icon className={`h-4 w-4 ${currentCalculator.color}`} />
+                  <span>{currentCalculator.title}</span>
                 </div>
               </SelectTrigger>
               <SelectContent>
@@ -81,27 +93,13 @@ export default function CalculatorPage() {
         <Card className="border-border/50 bg-background/50 backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-6">
             <CardTitle className="flex items-center justify-center gap-3 text-2xl">
-              {calculatorType === "profit" ? (
-                <>
-                  <div className="h-10 w-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  Profit Calculator
-                </>
-              ) : (
-                <>
-                  <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  Position Size Calculator
-                </>
-              )}
+              <div className={`h-10 w-10 rounded-lg ${calculatorType === "profit" ? "bg-green-100 dark:bg-green-900/30" : "bg-blue-100 dark:bg-blue-900/30"} flex items-center justify-center`}>
+                <currentCalculator.icon className={`h-5 w-5 ${currentCalculator.color} dark:${currentCalculator.color.replace('text-', 'text-').replace('-600', '-400')}`} />
+              </div>
+              {currentCalculator.title}
             </CardTitle>
             <p className="text-muted-foreground text-base">
-              {calculatorType === "profit" 
-                ? "Analyze potential profits and risk/reward ratios across multiple take profit levels."
-                : "Calculate optimal position size based on your risk tolerance and stop loss levels."
-              }
+              {currentCalculator.description}
             </p>
           </CardHeader>
           <CardContent className="pt-0">
