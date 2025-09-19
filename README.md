@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# What's Risk Management
+
+A professional trading risk management calculator application built with enterprise-grade patterns and security standards. This tool helps traders calculate optimal position sizes, analyze profit potential, and manage risk/reward ratios for financial trading.
+
+## What This Project Does
+
+**What's Risk Management** provides two core calculation tools:
+
+- **Position Size Calculator**: Determines optimal position size based on risk tolerance, entry/stop loss levels, and leverage
+- **Profit Calculator**: Analyzes profit potential and risk/reward ratios for trading positions with multiple take-profit levels
+
+The application features mathematical accuracy with corrected formulas, comprehensive input validation, and a modern glassmorphism UI with dark/light theme support.
+
+## Technologies Used
+
+### Core Framework
+
+- **Next.js 15** - React framework with App Router
+- **React 19** - Latest React features and concurrent rendering
+- **TypeScript** - Type-safe development
+
+### UI & Styling
+
+- **Tailwind CSS 4** - Utility-first CSS framework
+- **shadcn/ui** - Component library built on Radix UI primitives
+- **Lucide React** - Modern icon library
+- **next-themes** - Dark/light theme management
+
+### Form Management & Validation
+
+- **react-hook-form** - Performant form library
+- **Zod** - TypeScript-first schema validation
+- **@hookform/resolvers** - Form validation integration
+
+### Development Tools
+
+- **ESLint** - Code linting with Next.js configuration
+- **TypeScript** - Static type checking
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ or Bun (recommended)
+- Git
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd whats-risk-management
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   # Using Bun (recommended)
+   bun install
+   
+   # Or using npm
+   npm install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   # Using Bun
+   bun dev
+   
+   # Or using npm
+   npm run dev
+   ```
+
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+
+## Available Commands
+
+### Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun dev          # Start development server
+npm run dev      # Alternative with npm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun run build    # Build for production (static export)
+bun start        # Start production server (if not using static export)
+npm run build    # Alternative with npm
+npm start        # Alternative with npm
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Code Quality
 
-## Learn More
+```bash
+bun run lint     # Run ESLint checks
+npm run lint     # Alternative with npm
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── calculator/         # Calculator application page
+│   └── page.tsx           # Landing page
+├── components/
+│   ├── calculators/       # Calculator components
+│   │   ├── position-size-calculator.tsx
+│   │   └── profit-calculator.tsx
+│   └── ui/               # shadcn/ui components
+├── lib/
+│   ├── calculations.ts   # Core calculation logic
+│   └── utils.ts         # Utility functions
+└── styles/
+    └── globals.css      # Global styles
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Features
 
-## Deploy on Vercel
+### Mathematical Accuracy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Corrected Position Sizing**: `Risk Amount / (Risk Per Unit × Leverage)`
+- **Fixed Profit Calculations**: No double leverage counting
+- **Comprehensive Validation**: Prevents division by zero and overflow errors
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Security
+
+- **Content Security Policy (CSP)** headers
+- **Input sanitization** and validation
+- **Environment variable protection**
+
+### User Experience
+
+- **Glassmorphism UI** with gradient effects
+- **Dark/Light theme** support with system preference detection
+- **Responsive design** optimized for all devices
+- **Real-time validation** with user-friendly error messages
+
+## Deployment
+
+The application is configured for deployment on Azure Static Web Apps with automatic CI/CD via GitHub Actions. The build process generates static files for optimal performance and global distribution.
+
+## Contributing
+
+1. Follow the existing code patterns and architecture
+2. Use TypeScript strictly (no `any` types)
+3. Test calculations manually with known values
+4. Run linting before committing: `bun run lint`
+5. Follow the security guidelines in `CLAUDE.md`
+
+## License
+
+Private repository - All rights reserved.
