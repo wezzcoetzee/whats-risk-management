@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Calculator, TrendingUp, } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfitCalculator } from "@/components/calculators/profit-calculator";
 import { PositionSizeCalculator } from "@/components/calculators/position-size-calculator";
@@ -128,7 +128,7 @@ function CalculatorContent() {
               <div className="flex-1 space-y-1">
                 <div className="flex items-baseline gap-2">
                   <span className="data-mono text-xs text-amber-500/80 uppercase tracking-wider">RISK_WARNING</span>
-                  <span className="data-mono text-[10px] text-muted-foreground">// IMPORTANT</span>
+                  <span className="data-mono text-[10px] text-muted-foreground">{'// IMPORTANT'}</span>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   Professional risk management protocol: Maximum 1-2% account risk per position. Always define exit parameters before trade execution. Capital preservation is paramount.

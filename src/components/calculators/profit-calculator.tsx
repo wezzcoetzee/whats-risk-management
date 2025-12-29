@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { TrendingUp, Calculator, Shield, DollarSign, Target } from "lucide-react";
+import { TrendingUp, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -443,7 +443,7 @@ export function ProfitCalculator() {
             <div className="flex items-baseline gap-2 mb-4">
               <span className="data-mono text-xs text-[var(--profit-green)] uppercase tracking-wider">P&L_ANALYSIS</span>
               <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
-              <span className="data-mono text-[10px] text-muted-foreground">// CALCULATED</span>
+              <span className="data-mono text-[10px] text-muted-foreground">{'// CALCULATED'}</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

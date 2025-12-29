@@ -27,15 +27,22 @@ export interface PositionCalculationResult {
   riskPercentage: number;
 }
 
+export interface TakeProfitBreakdown {
+  price: number;
+  profit: number;
+  riskReward: number;
+}
+
 export interface ProfitCalculationResult {
   profits: number[];
   roi: number;
-  riskReward: number;
+  primaryRiskReward: number;
   averageRiskReward: number;
   potentialLoss: number;
   margin: number;
   totalProfit: number;
   averageProfit: number;
+  takeProfitBreakdown: TakeProfitBreakdown[];
 }
 
 /**
@@ -85,35 +92,44 @@ export function calculateProfitMetrics(input: ProfitCalculationInput): ProfitCal
   // Calculate profit at each take profit level (no leverage multiplication - already in position size)
   const profits = takeProfits.map(tp => {
     if (tp <= 0) return 0;
-    
-    const profitPercentage = tradeType === 'LONG' 
+
+    const profitPercentage = tradeType === 'LONG'
       ? (tp - entryPrice) / entryPrice
       : (entryPrice - tp) / entryPrice;
-    
+
     // Return absolute profit amount (leverage effect already in position size)
     return profitPercentage * positionSize;
   }).filter(profit => profit > 0);
-  
+
   // Calculate metrics
   const totalProfit = profits.reduce((sum, profit) => sum + profit, 0);
   const averageProfit = profits.length > 0 ? totalProfit / profits.length : 0;
   const margin = (positionSize * entryPrice) / leverage;
   const roi = margin > 0 ? (averageProfit / margin) * 100 : 0;
-  
+
   // Risk/Reward: Use the first (primary) take profit level for standard R:R calculation
   const primaryProfit = profits.length > 0 ? profits[0] : 0;
-  const riskReward = potentialLoss > 0 ? primaryProfit / potentialLoss : 0;
+  const primaryRiskReward = potentialLoss > 0 ? primaryProfit / potentialLoss : 0;
   const averageRiskReward = potentialLoss > 0 ? averageProfit / potentialLoss : 0;
-  
+
+  // Build take profit breakdown with individual R:R ratios
+  const validTakeProfits = takeProfits.filter(tp => tp > 0);
+  const takeProfitBreakdown: TakeProfitBreakdown[] = validTakeProfits.map((tp, index) => ({
+    price: tp,
+    profit: profits[index] || 0,
+    riskReward: potentialLoss > 0 ? (profits[index] || 0) / potentialLoss : 0
+  }));
+
   return {
     profits,
     roi,
-    riskReward,
+    primaryRiskReward,
     averageRiskReward,
     potentialLoss,
     margin,
     totalProfit,
-    averageProfit
+    averageProfit,
+    takeProfitBreakdown
   };
 }
 

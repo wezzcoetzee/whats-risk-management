@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calculator, TrendingUp, Shield, Target, Activity, BarChart3, Zap } from "lucide-react";
+import { Shield, Target, Activity, BarChart3, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {

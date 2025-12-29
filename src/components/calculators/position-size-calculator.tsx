@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Calculator, TrendingUp, Shield, DollarSign } from "lucide-react";
+import { Calculator, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import {
   calculatePositionSize,
   validateTradingParameters,
@@ -295,7 +295,7 @@ export function PositionSizeCalculator() {
             <div className="flex items-baseline gap-2 mb-4">
               <span className="data-mono text-xs text-[var(--data-cyan)] uppercase tracking-wider">OUTPUT_RESULTS</span>
               <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
-              <span className="data-mono text-[10px] text-muted-foreground">// CALCULATED</span>
+              <span className="data-mono text-[10px] text-muted-foreground">{'// CALCULATED'}</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
