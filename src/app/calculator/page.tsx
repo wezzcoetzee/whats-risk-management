@@ -24,42 +24,90 @@ function CalculatorContent() {
 
   return (
     <>
-      {/* Background gradient effects */}
+      {/* Terminal-style background effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-gradient-to-br from-primary/10 to-purple-500/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-tr from-blue-500/10 to-primary/10 blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-primary/5 to-purple-500/5 blur-3xl" />
+        {/* Edge glow effects */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--profit-green)] to-transparent opacity-50" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[var(--data-cyan)] to-transparent opacity-50" />
+
+        {/* Corner accent glows */}
+        <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[var(--profit-green)] opacity-5 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-[var(--data-cyan)] opacity-5 blur-3xl" />
       </div>
-      
-      <div className="container mx-auto py-8 px-4 max-w-4xl relative">
-        {/* Header Section */}
-        <div className="text-center space-y-6 mb-12">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 shadow-lg shadow-primary/25">
-            <Calculator className="h-8 w-8 text-primary-foreground" />
+
+      <div className="container mx-auto py-8 px-4 max-w-6xl relative z-10">
+        {/* Header Section - Terminal Style */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-card/50 border border-border/50 rounded">
+                <div className="h-2 w-2 rounded-full bg-[var(--profit-green)] animate-pulse" />
+                <span className="text-xs data-mono text-muted-foreground tracking-wider">ACTIVE_SESSION</span>
+              </div>
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight uppercase">
+                <span className="data-mono text-muted-foreground text-base">CALC/</span>
+                {calculatorType === "profit" ? (
+                  <span className="bg-gradient-to-r from-[var(--profit-green)] to-foreground bg-clip-text text-transparent">P&L ANALYSIS</span>
+                ) : (
+                  <span className="bg-gradient-to-r from-[var(--data-cyan)] to-foreground bg-clip-text text-transparent">POSITION SIZING</span>
+                )}
+              </h1>
+            </div>
+
+            <div className="hidden md:flex flex-col items-end gap-1">
+              <span className="text-xs data-mono text-muted-foreground">TERMINAL v2.0</span>
+              <div className="flex items-center gap-2">
+                <div className="h-1 w-1 rounded-full bg-[var(--profit-green)]" />
+                <span className="text-xs data-mono text-muted-foreground">REAL-TIME</span>
+              </div>
+            </div>
           </div>
-          
-          <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Trading Calculator Suite</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Professional risk management tools to optimize your trading strategy and protect your capital.
-            </p>
-          </div>
+
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-6" />
+
+          <p className="text-sm text-muted-foreground max-w-3xl">
+            {currentCalculator.description}
+          </p>
         </div>
 
-        {/* Calculator Card */}
-        <Card className="border-border/50 bg-background/50 backdrop-blur-sm shadow-xl">
-          <CardHeader className="text-center pb-6">
-            <CardTitle className="flex items-center justify-center gap-3 text-2xl">
-              <div className={`h-10 w-10 rounded-lg ${calculatorType === "profit" ? "bg-green-100 dark:bg-green-900/30" : "bg-blue-100 dark:bg-blue-900/30"} flex items-center justify-center`}>
-                <currentCalculator.icon className={`h-5 w-5 ${currentCalculator.color} dark:${currentCalculator.color.replace('text-', 'text-').replace('-600', '-400')}`} />
+        {/* Calculator Terminal Card */}
+        <Card className="relative overflow-hidden border border-border/50 bg-card/80 backdrop-blur-sm shadow-2xl noise-texture">
+          {/* Top accent line with color based on calculator type */}
+          <div className={`absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent ${
+            calculatorType === "profit"
+              ? "via-[var(--profit-green)]"
+              : "via-[var(--data-cyan)]"
+          } to-transparent`} />
+
+          <CardHeader className="border-b border-border/30 pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`relative h-10 w-10 border ${
+                  calculatorType === "profit"
+                    ? "border-[var(--profit-green)]/30 bg-[var(--profit-green)]/5"
+                    : "border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5"
+                } flex items-center justify-center`}>
+                  <currentCalculator.icon className={`h-5 w-5 ${
+                    calculatorType === "profit" ? "text-[var(--profit-green)]" : "text-[var(--data-cyan)]"
+                  }`} />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold uppercase tracking-wide">{currentCalculator.title}</CardTitle>
+                  <p className="text-xs data-mono text-muted-foreground mt-0.5">CALCULATION_ENGINE</p>
+                </div>
               </div>
-              {currentCalculator.title}
-            </CardTitle>
-            <p className="text-muted-foreground text-base">
-              {currentCalculator.description}
-            </p>
+
+              <div className={`px-3 py-1 border rounded data-mono text-xs ${
+                calculatorType === "profit"
+                  ? "border-[var(--profit-green)]/30 bg-[var(--profit-green)]/5 text-[var(--profit-green)]"
+                  : "border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 text-[var(--data-cyan)]"
+              }`}>
+                {calculatorType === "profit" ? "P&L" : "RISK"}
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="pt-0">
+
+          <CardContent className="pt-6">
             {calculatorType === "profit" ? (
               <ProfitCalculator />
             ) : (
@@ -67,15 +115,27 @@ function CalculatorContent() {
             )}
           </CardContent>
         </Card>
-        
-        {/* Educational Note */}
-        <div className="mt-12 text-center space-y-3">
-          <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto">
-            <TrendingUp className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+
+        {/* Terminal Warning Banner */}
+        <div className="mt-8 relative">
+          <div className="border border-amber-500/30 bg-amber-500/5 backdrop-blur-sm p-4 rounded">
+            <div className="flex items-start gap-3">
+              <div className="relative mt-0.5">
+                <div className="h-5 w-5 border border-amber-500/50 bg-amber-500/10 flex items-center justify-center">
+                  <TrendingUp className="h-3 w-3 text-amber-500" />
+                </div>
+              </div>
+              <div className="flex-1 space-y-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="data-mono text-xs text-amber-500/80 uppercase tracking-wider">RISK_WARNING</span>
+                  <span className="data-mono text-[10px] text-muted-foreground">// IMPORTANT</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Professional risk management protocol: Maximum 1-2% account risk per position. Always define exit parameters before trade execution. Capital preservation is paramount.
+                </p>
+              </div>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            <strong>Professional Tip:</strong> Always use proper risk management. Never risk more than 1-2% of your account on a single trade, and always have a clear exit strategy before entering any position.
-          </p>
         </div>
       </div>
     </>

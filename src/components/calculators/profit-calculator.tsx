@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import {
   calculateProfitMetrics,
   validateTradingParameters,
@@ -25,7 +25,6 @@ import {
   type ProfitCalculationResult
 } from "@/lib/calculations";
 
-// Default form values
 const defaultFormValues = {
   tradeType: "LONG" as const,
   entry: "",
@@ -89,7 +88,7 @@ const profitCalculatorSchema = z.object({
     data.tp3 ? safeParseFloat(data.tp3) : 0,
     data.tp4 ? safeParseFloat(data.tp4) : 0,
   ].filter(tp => tp > 0);
-  
+
   const validation = validateTradingParameters(data.tradeType, entry, stopLoss, takeProfits);
   return validation.isValid;
 }, {
@@ -98,7 +97,6 @@ const profitCalculatorSchema = z.object({
 });
 
 type ProfitCalculatorForm = z.infer<typeof profitCalculatorSchema>;
-
 type ProfitResults = ProfitCalculationResult;
 
 export function ProfitCalculator() {
@@ -124,23 +122,22 @@ export function ProfitCalculator() {
           data.tp4 ? safeParseFloat(data.tp4) : 0,
         ],
       };
-      
-      // Validate parameters
+
       const validation = validateTradingParameters(
         input.tradeType,
         input.entryPrice,
         input.stopLossPrice,
         input.takeProfits.filter(tp => tp > 0)
       );
-      
+
       if (!validation.isValid) {
         console.error('Validation errors:', validation.errors);
         return;
       }
-      
+
       const result = calculateProfitMetrics(input);
       setResults(result);
-      
+
     } catch (error) {
       console.error('Calculation error:', error);
       setResults(null);
@@ -149,27 +146,59 @@ export function ProfitCalculator() {
 
   return (
     <Form {...form}>
-      <div className="space-y-12">
-        <div className="space-y-10">
+      <div className="space-y-8">
+        {/* Input Section */}
+        <div className="space-y-6">
+          <div className="flex items-baseline gap-2 mb-4">
+            <span className="data-mono text-xs text-muted-foreground uppercase tracking-wider">INPUT_PARAMETERS</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+          </div>
+
           <FormField
             control={form.control}
             name="tradeType"
             render={({ field }) => (
-              <FormItem className="min-h-[80px]">
-                <FormLabel>Trade Type</FormLabel>
+              <FormItem>
+                <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground">Trade Direction</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="flex gap-4 mt-2"
+                    className="flex gap-3 mt-2"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="LONG" id="long" />
-                      <FormLabel htmlFor="long">Long</FormLabel>
+                    <div className="flex-1">
+                      <input
+                        type="radio"
+                        id="profit-long"
+                        value="LONG"
+                        checked={field.value === "LONG"}
+                        onChange={() => field.onChange("LONG")}
+                        className="peer sr-only"
+                      />
+                      <label
+                        htmlFor="profit-long"
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 border border-border bg-background/50 rounded cursor-pointer transition-all peer-checked:border-[var(--profit-green)] peer-checked:bg-[var(--profit-green)]/5 peer-checked:text-[var(--profit-green)] hover:border-[var(--profit-green)]/50"
+                      >
+                        <TrendingUp className="h-4 w-4" />
+                        <span className="data-mono text-sm font-medium">LONG</span>
+                      </label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="SHORT" id="short" />
-                      <FormLabel htmlFor="short">Short</FormLabel>
+                    <div className="flex-1">
+                      <input
+                        type="radio"
+                        id="profit-short"
+                        value="SHORT"
+                        checked={field.value === "SHORT"}
+                        onChange={() => field.onChange("SHORT")}
+                        className="peer sr-only"
+                      />
+                      <label
+                        htmlFor="profit-short"
+                        className="flex items-center justify-center gap-2 px-4 py-2.5 border border-border bg-background/50 rounded cursor-pointer transition-all peer-checked:border-[var(--loss-red)] peer-checked:bg-[var(--loss-red)]/5 peer-checked:text-[var(--loss-red)] hover:border-[var(--loss-red)]/50"
+                      >
+                        <TrendingUp className="h-4 w-4 rotate-180" />
+                        <span className="data-mono text-sm font-medium">SHORT</span>
+                      </label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -184,21 +213,23 @@ export function ProfitCalculator() {
               name="entry"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <TrendingUp className="h-4 w-4 text-primary" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Entry Price
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -208,22 +239,24 @@ export function ProfitCalculator() {
               name="leverage"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Calculator className="h-4 w-4 text-primary" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Leverage
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="1" 
-                      step="0.1"
-                      min="1"
-                      max="100"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="1"
+                        step="0.1"
+                        min="1"
+                        max="100"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">×</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -233,21 +266,23 @@ export function ProfitCalculator() {
               name="stopLoss"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Shield className="h-4 w-4 text-destructive" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Stop Loss
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--loss-red)] focus:ring-1 focus:ring-[var(--loss-red)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -257,24 +292,31 @@ export function ProfitCalculator() {
               name="positionSize"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <DollarSign className="h-4 w-4 text-green-600" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Position Size
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="1000.00" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="1000.00"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="flex items-baseline gap-2 mt-6 mb-4">
+            <span className="data-mono text-xs text-[var(--profit-green)] uppercase tracking-wider">TARGET_LEVELS</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -283,21 +325,23 @@ export function ProfitCalculator() {
               name="tp1"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Target className="h-4 w-4 text-green-600" />
-                    Take Profit 1 *
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
+                    Take Profit 1 <span className="text-[var(--profit-green)]">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -307,21 +351,23 @@ export function ProfitCalculator() {
               name="tp2"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Target className="h-4 w-4 text-green-600" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Take Profit 2
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00 (optional)" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="Optional"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -331,21 +377,23 @@ export function ProfitCalculator() {
               name="tp3"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Target className="h-4 w-4 text-green-600" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Take Profit 3
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00 (optional)" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="Optional"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
@@ -355,115 +403,183 @@ export function ProfitCalculator() {
               name="tp4"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="flex items-center gap-2 text-base font-medium">
-                    <Target className="h-4 w-4 text-green-600" />
+                  <FormLabel className="data-mono text-xs uppercase tracking-wider text-muted-foreground mb-2">
                     Take Profit 4
                   </FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="0.00 (optional)" 
-                      step="0.01"
-                      min="0"
-                      className="h-11 text-base bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background transition-all duration-200"
-                      {...field} 
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        placeholder="Optional"
+                        step="0.01"
+                        min="0"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--profit-green)] focus:ring-1 focus:ring-[var(--profit-green)]/20 transition-all pl-3"
+                        {...field}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                    </div>
                   </FormControl>
-                  <FormMessage className="mt-1" />
+                  <FormMessage className="mt-1 text-xs" />
                 </FormItem>
               )}
             />
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full h-12 text-base font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-200" 
+          <Button
+            type="submit"
+            className="w-full h-14 data-mono text-sm font-bold uppercase tracking-wider bg-[var(--profit-green)] text-background hover:bg-[var(--profit-green)]/90 border border-[var(--profit-green)] hover:shadow-[0_0_20px_-5px_var(--profit-green)] transition-all duration-300 relative overflow-hidden group"
             onClick={form.handleSubmit(handleCalculateProfit)}
           >
-            <Calculator className="mr-2 h-4 w-4" />
-            Calculate Profit Metrics
+            <span className="relative z-10 flex items-center gap-2">
+              <Calculator className="h-4 w-4" />
+              Execute Analysis
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
           </Button>
         </div>
 
         {results && (
-          <div className="mt-8 p-6 border rounded-xl bg-gradient-to-br from-background to-muted/20 space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold">Profit Analysis Results</h3>
+          <div className="border-t border-border/30 pt-6 space-y-6">
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className="data-mono text-xs text-[var(--profit-green)] uppercase tracking-wider">P&L_ANALYSIS</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+              <span className="data-mono text-[10px] text-muted-foreground">// CALCULATED</span>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Return on Investment</p>
-                  <p className="text-2xl font-bold text-green-600">{formatPercentage(results.roi)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Average profit vs margin</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Total Profit */}
+              <div className="relative border border-[var(--profit-green)]/30 bg-[var(--profit-green)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--profit-green)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--profit-green)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Total Profit</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--profit-green)] animate-pulse" />
                 </div>
-                
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Primary Risk/Reward</p>
-                  <p className="text-2xl font-bold text-blue-600">{results.riskReward.toFixed(2)}:1</p>
-                  <p className="text-xs text-muted-foreground mt-1">First take profit vs max loss</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Average Profit</p>
-                  <p className="text-2xl font-bold text-green-600">{formatCurrency(results.averageProfit)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Per take profit level</p>
-                </div>
-                
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Margin Required</p>
-                  <p className="text-2xl font-bold text-blue-600">{formatCurrency(results.margin)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Capital needed for position</p>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--profit-green)] number-update">
+                    {formatCurrency(results.totalProfit)}
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">AGGREGATE_PNL</p>
                 </div>
               </div>
-              
-              <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Average Risk/Reward</p>
-                  <p className="text-2xl font-bold text-purple-600">{results.averageRiskReward.toFixed(2)}:1</p>
-                  <p className="text-xs text-muted-foreground mt-1">Average profit vs max loss</p>
+
+              {/* Average Profit */}
+              <div className="relative border border-[var(--profit-green)]/30 bg-[var(--profit-green)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--profit-green)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--profit-green)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Average Profit</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--profit-green)] animate-pulse" />
                 </div>
-                
-                <div className="p-4 rounded-lg bg-card border">
-                  <p className="text-sm text-muted-foreground font-medium">Maximum Loss</p>
-                  <p className="text-2xl font-bold text-destructive">{formatCurrency(results.potentialLoss)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Risk if stop loss hit</p>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--profit-green)] number-update">
+                    {formatCurrency(results.averageProfit)}
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">PER_TARGET</p>
+                </div>
+              </div>
+
+              {/* ROI */}
+              <div className="relative border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--data-cyan)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--data-cyan)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">ROI</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--data-cyan)] animate-pulse" />
+                </div>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--data-cyan)] number-update">
+                    {formatPercentage(results.roi)}
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">RETURN_ON_MARGIN</p>
+                </div>
+              </div>
+
+              {/* Potential Loss */}
+              <div className="relative border border-[var(--loss-red)]/30 bg-[var(--loss-red)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--loss-red)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--loss-red)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Maximum Loss</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--loss-red)] animate-pulse" />
+                </div>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--loss-red)] number-update">
+                    {formatCurrency(results.potentialLoss)}
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">DOWNSIDE_RISK</p>
+                </div>
+              </div>
+
+              {/* Primary R:R */}
+              <div className="relative border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--data-cyan)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--data-cyan)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Primary R:R</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--data-cyan)] animate-pulse" />
+                </div>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--data-cyan)] number-update">
+                    {results.primaryRiskReward.toFixed(2)}:1
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">FIRST_TARGET</p>
+                </div>
+              </div>
+
+              {/* Average R:R */}
+              <div className="relative border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--data-cyan)]/50 transition-all">
+                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--data-cyan)]" />
+                <div className="flex items-start justify-between mb-3">
+                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Average R:R</span>
+                  <div className="h-1 w-1 rounded-full bg-[var(--data-cyan)] animate-pulse" />
+                </div>
+                <div className="space-y-1">
+                  <p className="data-mono text-3xl font-bold text-[var(--data-cyan)] number-update">
+                    {results.averageRiskReward.toFixed(2)}:1
+                  </p>
+                  <p className="data-mono text-xs text-muted-foreground">ALL_TARGETS</p>
                 </div>
               </div>
             </div>
-            
-            {results.profits.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-green-600" />
-                  <h4 className="text-lg font-semibold">Individual Take Profit Levels</h4>
+
+            {/* Take Profit Breakdown */}
+            {results.takeProfitBreakdown.length > 0 && (
+              <div className="mt-6 space-y-3">
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="data-mono text-xs text-muted-foreground uppercase tracking-wider">TARGET_BREAKDOWN</span>
+                  <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {results.profits.map((profit, index) => {
-                    if (profit <= 0) return null;
-                    return (
-                      <div 
-                        key={index}
-                        className="flex justify-between items-center p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-full bg-green-600 text-white text-sm font-bold flex items-center justify-center">
-                            {index + 1}
-                          </div>
-                          <span className="font-medium">Take Profit {index + 1}</span>
+
+                <div className="space-y-2">
+                  {results.takeProfitBreakdown.map((tp, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border border-border/30 bg-card/30 backdrop-blur-sm rounded hover:border-[var(--profit-green)]/30 transition-all"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="data-mono text-xs text-muted-foreground w-12">
+                          TP{index + 1}
                         </div>
-                        <span className="text-lg font-bold text-green-700 dark:text-green-400">
-                          {formatCurrency(profit)}
-                        </span>
+                        <div className="data-mono text-sm font-medium">
+                          {formatCurrency(tp.price)}
+                        </div>
                       </div>
-                    );
-                  })}
+                      <div className="flex items-center gap-6">
+                        <div className="text-right">
+                          <div className="data-mono text-sm font-bold text-[var(--profit-green)]">
+                            {formatCurrency(tp.profit)}
+                          </div>
+                          <div className="data-mono text-[10px] text-muted-foreground">
+                            PROFIT
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="data-mono text-sm font-bold text-[var(--data-cyan)]">
+                            {tp.riskReward.toFixed(2)}:1
+                          </div>
+                          <div className="data-mono text-[10px] text-muted-foreground">
+                            R:R
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -472,4 +588,4 @@ export function ProfitCalculator() {
       </div>
     </Form>
   );
-} 
+}
