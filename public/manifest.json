@@ -10,30 +10,16 @@
   "categories": ["finance", "business", "utilities"],
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/screenshot-desktop.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide"
     }
   ],
   "shortcuts": [
@@ -41,27 +27,13 @@
       "name": "Position Size Calculator",
       "short_name": "Position Size",
       "description": "Calculate optimal trading position size",
-      "url": "/calculator?type=position",
-      "icons": [
-        {
-          "src": "/icon-position.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "/calculator?type=position"
     },
     {
       "name": "Profit Calculator",
       "short_name": "Profit Calc",
       "description": "Analyze profit potential and ROI",
-      "url": "/calculator?type=profit",
-      "icons": [
-        {
-          "src": "/icon-profit.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "url": "/calculator?type=profit"
     }
   ],
   "related_applications": [],

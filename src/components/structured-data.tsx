@@ -5,13 +5,10 @@ export function WebsiteStructuredData() {
     "name": "Risk Terminal",
     "url": "https://whatsriskmanagement.com",
     "description": "Professional trading risk management calculators for position sizing and profit analysis",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://whatsriskmanagement.com/calculator?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
+    "publisher": {
+      "@type": "Organization",
+      "name": "Risk Terminal",
+      "url": "https://whatsriskmanagement.com"
     }
   };
 
@@ -29,12 +26,8 @@ export function OrganizationStructuredData() {
     "@type": "Organization",
     "name": "Risk Terminal",
     "url": "https://whatsriskmanagement.com",
-    "logo": "https://whatsriskmanagement.com/logo.png",
-    "description": "Professional-grade trading risk management calculators and tools",
-    "sameAs": [
-      "https://twitter.com/riskterminal",
-      // Add other social media URLs when available
-    ]
+    "logo": "https://whatsriskmanagement.com/icon-512x512.png",
+    "description": "Professional-grade trading risk management calculators and tools"
   };
 
   return (
@@ -87,15 +80,11 @@ export function SoftwareApplicationStructuredData() {
     "@type": "SoftwareApplication",
     "name": "Position Size Calculator",
     "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1250"
     },
     "description": "Calculate optimal trading position size based on risk tolerance, account size, entry price, stop loss, and leverage. Professional-grade risk management tool.",
     "featureList": [
