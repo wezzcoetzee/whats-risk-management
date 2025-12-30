@@ -1,6 +1,8 @@
 # What's Risk Management
 
-A professional trading risk management calculator application built with enterprise-grade patterns and security standards. This tool helps traders calculate optimal position sizes, analyze profit potential, and manage risk/reward ratios for financial trading.
+An educational trading risk management calculator designed to help traders learn how to manage their risk and trade safely. This tool teaches position sizing principles, profit potential analysis, and risk/reward ratio management for financial trading.
+
+> **Disclaimer**: This application is for educational purposes only and does not constitute financial advice. Trading involves substantial risk of loss. Always consult with a qualified financial advisor before making trading decisions.
 
 ## What This Project Does
 
