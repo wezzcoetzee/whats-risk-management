@@ -107,17 +107,30 @@ npm run lint     # Alternative with npm
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── calculator/         # Calculator application page
-│   └── page.tsx           # Landing page
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── opengraph-image.tsx
+│   ├── globals.css         # Global styles
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Landing page
+│   ├── not-found.tsx       # 404 page
+│   ├── sitemap.ts          # SEO sitemap
+│   ├── robots.ts           # SEO robots.txt
+│   └── opengraph-image.tsx # OG image generation
 ├── components/
-│   ├── calculators/       # Calculator components
+│   ├── calculators/        # Calculator components
 │   │   ├── position-size-calculator.tsx
 │   │   └── profit-calculator.tsx
-│   └── ui/               # shadcn/ui components
-├── lib/
-│   ├── calculations.ts   # Core calculation logic
-│   └── utils.ts         # Utility functions
-└── styles/
-    └── globals.css      # Global styles
+│   ├── ui/                 # shadcn/ui components
+│   ├── header.tsx          # App header
+│   ├── theme-provider.tsx  # Theme context provider
+│   ├── theme-toggle.tsx    # Dark/light toggle
+│   └── structured-data.tsx # JSON-LD SEO data
+├── hooks/
+│   └── use-calculator-selection.ts  # Calculator state hook
+└── lib/
+    ├── calculations.ts     # Core calculation logic
+    └── utils.ts            # Utility functions
 ```
 
 ## Key Features
@@ -141,6 +154,13 @@ src/
 - **Responsive design** optimized for all devices
 - **Real-time validation** with user-friendly error messages
 
+### SEO Optimization
+
+- **Dynamic OpenGraph images** for social sharing
+- **Structured data (JSON-LD)** for rich search results
+- **Auto-generated sitemap** and robots.txt
+- **Semantic HTML** and meta tags
+
 ## Deployment
 
 The application is configured for deployment on Azure Static Web Apps with automatic CI/CD via GitHub Actions. The build process generates static files for optimal performance and global distribution.
@@ -151,7 +171,6 @@ The application is configured for deployment on Azure Static Web Apps with autom
 2. Use TypeScript strictly (no `any` types)
 3. Test calculations manually with known values
 4. Run linting before committing: `bun run lint`
-5. Follow the security guidelines in `CLAUDE.md`
 
 ## License
 
