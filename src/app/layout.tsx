@@ -103,7 +103,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <Script
           strategy="lazyOnload"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-M18S2XK0BZ`}
+          src={`https://www.googletagmanager.com/gtag/js?id=G-QJLE0NXT2D`}
         />
         <Script strategy="lazyOnload" id="google-analytics">
           {`
@@ -111,7 +111,7 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
      
-              gtag('config', 'G-M18S2XK0BZ');
+              gtag('config', 'G-QJLE0NXT2D');
             `}
         </Script>
         <ThemeProvider
