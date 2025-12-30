@@ -16,8 +16,81 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "What's Risk Management?",
-  description: "Learn more about how to trade safely and manage your risk",
+  metadataBase: new URL('https://whatsriskmanagement.com'),
+  title: {
+    default: "Risk Terminal - Professional Trading Risk Management Calculators",
+    template: "%s | Risk Terminal"
+  },
+  description: "Professional-grade trading risk management calculators for position sizing and profit analysis. Calculate optimal positions, analyze P&L, manage capital with institutional-level precision. Free trading tools.",
+  keywords: [
+    "trading risk management",
+    "position size calculator",
+    "profit calculator",
+    "trading calculator",
+    "risk management tools",
+    "position sizing",
+    "trading risk calculator",
+    "leverage calculator",
+    "stop loss calculator",
+    "take profit calculator",
+    "ROI calculator",
+    "risk reward ratio",
+    "trading tools",
+    "forex calculator",
+    "crypto trading calculator",
+    "stock trading calculator",
+    "margin calculator",
+    "professional trading tools"
+  ],
+  authors: [{ name: "Risk Terminal" }],
+  creator: "Risk Terminal",
+  publisher: "Risk Terminal",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://whatsriskmanagement.com',
+    siteName: 'Risk Terminal',
+    title: 'Risk Terminal - Professional Trading Risk Management Calculators',
+    description: 'Professional-grade trading risk management calculators for position sizing and profit analysis. Calculate optimal positions, analyze P&L, manage capital with institutional-level precision.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Risk Terminal - Professional Trading Risk Management Calculators',
+    description: 'Professional-grade trading risk management calculators for position sizing and profit analysis. Free trading tools for institutional-level precision.',
+    creator: '@riskterminal',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Add your verification codes here when you have them
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+    // bing: 'your-bing-verification-code',
+  },
+  category: 'finance',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Risk Terminal',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
 };
 
 export default function RootLayout({

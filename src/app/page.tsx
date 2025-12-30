@@ -1,10 +1,53 @@
 import Link from "next/link";
 import { Shield, Target, Activity, BarChart3, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Metadata } from "next";
+import { WebsiteStructuredData, OrganizationStructuredData, FAQStructuredData } from "@/components/structured-data";
+
+export const metadata: Metadata = {
+  title: "Risk Terminal - Professional Trading Risk Management & Position Size Calculators",
+  description: "Free professional-grade trading risk management calculators. Calculate optimal position sizes, analyze profit potential, manage leverage, and optimize risk/reward ratios. Institutional-level trading tools for forex, crypto, and stock traders.",
+  keywords: [
+    "trading risk management",
+    "position size calculator",
+    "profit calculator",
+    "risk management calculator",
+    "trading calculator",
+    "forex calculator",
+    "crypto trading calculator",
+    "stock trading calculator",
+    "leverage calculator",
+    "margin calculator",
+    "stop loss calculator",
+    "risk reward ratio",
+    "trading tools",
+    "professional trading tools",
+    "capital management",
+    "trading risk tools"
+  ],
+  openGraph: {
+    title: 'Risk Terminal - Professional Trading Risk Management Calculators',
+    description: 'Free professional-grade trading risk management calculators for position sizing and profit analysis. Institutional-level precision for forex, crypto, and stock traders.',
+    url: 'https://whatsriskmanagement.com',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Risk Terminal - Professional Trading Risk Management Calculators',
+    description: 'Free professional-grade trading risk management calculators. Calculate optimal positions and analyze profits with institutional-level precision.',
+  },
+  alternates: {
+    canonical: 'https://whatsriskmanagement.com',
+  },
+};
 
 export default function Home() {
   return (
     <>
+      <WebsiteStructuredData />
+      <OrganizationStructuredData />
+      <FAQStructuredData />
+
       {/* Terminal-style background effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         {/* Edge glow effects - terminal monitor style */}
@@ -20,7 +63,7 @@ export default function Home() {
 
       <main className="flex flex-1 flex-col items-center justify-center p-8 md:p-24 relative z-10">
         {/* Hero Section - Terminal Style */}
-        <div className="text-center space-y-8 mb-20">
+        <section className="text-center space-y-8 mb-20" aria-label="Hero section">
           {/* Terminal Status Indicator */}
           <div className="mb-6 inline-flex items-center gap-3 px-4 py-2 border border-[var(--profit-green)]/30 rounded bg-card/50 backdrop-blur-sm">
             <div className="relative">
@@ -41,10 +84,10 @@ export default function Home() {
               Professional-grade trading calculators for institutional-level risk management. Calculate positions, analyze P&L, and manage capital with precision.
             </p>
           </div>
-        </div>
+        </section>
 
         {/* Feature Cards - Terminal Style */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl w-full mb-20">
+        <section className="grid md:grid-cols-2 gap-6 max-w-5xl w-full mb-20" aria-label="Trading calculators">
           <Link href="/calculator?type=position" className="group">
             <Card className="relative overflow-hidden border border-[var(--data-cyan)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--data-cyan)]/60 hover:shadow-[0_0_30px_-5px_var(--data-cyan)] noise-texture">
               {/* Top accent line */}
@@ -142,10 +185,10 @@ export default function Home() {
               </CardContent>
             </Card>
           </Link>
-        </div>
+        </section>
 
         {/* Terminal Stats - Benefits Section */}
-        <div className="max-w-5xl w-full">
+        <section className="max-w-5xl w-full" aria-label="System capabilities">
           <div className="mb-10 text-center">
             <h2 className="text-2xl font-bold uppercase tracking-wider mb-2">
               <span className="data-mono text-muted-foreground text-sm">SYSTEM_</span>
@@ -227,7 +270,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </main>
     </>
   );

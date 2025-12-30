@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfitCalculator } from "@/components/calculators/profit-calculator";
 import { PositionSizeCalculator } from "@/components/calculators/position-size-calculator";
 import { useCalculatorSelection, getCalculatorMetadata } from "@/hooks/use-calculator-selection";
+import { WebApplicationStructuredData, SoftwareApplicationStructuredData, BreadcrumbStructuredData } from "@/components/structured-data";
 
 function CalculatorContent() {
   const { calculatorType, isInitialized } = useCalculatorSelection();
@@ -24,6 +25,15 @@ function CalculatorContent() {
 
   return (
     <>
+      <WebApplicationStructuredData />
+      <SoftwareApplicationStructuredData />
+      <BreadcrumbStructuredData
+        items={[
+          { name: "Home", url: "https://whatsriskmanagement.com" },
+          { name: "Calculator", url: "https://whatsriskmanagement.com/calculator" }
+        ]}
+      />
+
       {/* Terminal-style background effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         {/* Edge glow effects */}
