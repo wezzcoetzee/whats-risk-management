@@ -74,7 +74,7 @@ export default function Home() {
           </div>
 
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight uppercase">
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight uppercase font-display">
               <span className="bg-gradient-to-r from-foreground via-[var(--profit-green)] to-foreground bg-clip-text text-transparent">
                 Risk Terminal
               </span>
@@ -89,7 +89,7 @@ export default function Home() {
         {/* Feature Cards - Terminal Style */}
         <section className="grid md:grid-cols-2 gap-6 max-w-5xl w-full mb-20" aria-label="Trading calculators">
           <Link href="/calculator?type=position" className="group">
-            <Card className="relative overflow-hidden border border-[var(--data-cyan)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--data-cyan)]/60 hover:shadow-[0_0_30px_-5px_var(--data-cyan)] noise-texture">
+            <Card className="relative overflow-hidden border border-[var(--data-cyan)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--data-cyan)]/60 hover:shadow-[0_0_30px_-5px_var(--data-cyan)] noise-texture card-hover-lift">
               {/* Top accent line */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--data-cyan)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
 
@@ -138,7 +138,7 @@ export default function Home() {
           </Link>
 
           <Link href="/calculator?type=profit" className="group">
-            <Card className="relative overflow-hidden border border-[var(--profit-green)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--profit-green)]/60 hover:shadow-[0_0_30px_-5px_var(--profit-green)] noise-texture">
+            <Card className="relative overflow-hidden border border-[var(--profit-green)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--profit-green)]/60 hover:shadow-[0_0_30px_-5px_var(--profit-green)] noise-texture card-hover-lift">
               {/* Top accent line */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--profit-green)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
 

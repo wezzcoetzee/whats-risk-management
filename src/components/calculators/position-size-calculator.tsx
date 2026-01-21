@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Calculator, TrendingUp } from "lucide-react";
+import { Calculator, TrendingUp, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -62,8 +62,107 @@ type PositionSizeCalculatorForm = z.infer<typeof positionSizeCalculatorSchema>;
 
 type PositionResults = PositionCalculationResult;
 
+type ResultColor = 'cyan' | 'green' | 'red' | 'amber';
+
+interface ResultCardProps {
+  label: string;
+  value: number;
+  unit: string;
+  color: ResultColor;
+  formatFn: (value: number) => string;
+  showResults: boolean;
+  staggerIndex: number;
+}
+
+function ResultCard({ label, value, unit, color, formatFn, showResults, staggerIndex }: ResultCardProps) {
+  const animatedValue = useAnimatedNumber(value, 600);
+
+  const colorClasses: Record<ResultColor, { border: string; bg: string; text: string; glow: string }> = {
+    cyan: {
+      border: 'border-[var(--data-cyan)]/30 hover:border-[var(--data-cyan)]/50',
+      bg: 'bg-[var(--data-cyan)]/5',
+      text: 'text-[var(--data-cyan)]',
+      glow: 'value-glow-cyan',
+    },
+    green: {
+      border: 'border-[var(--profit-green)]/30 hover:border-[var(--profit-green)]/50',
+      bg: 'bg-[var(--profit-green)]/5',
+      text: 'text-[var(--profit-green)]',
+      glow: 'value-glow-green',
+    },
+    red: {
+      border: 'border-[var(--loss-red)]/30 hover:border-[var(--loss-red)]/50',
+      bg: 'bg-[var(--loss-red)]/5',
+      text: 'text-[var(--loss-red)]',
+      glow: 'value-glow-red',
+    },
+    amber: {
+      border: 'border-amber-500/30 hover:border-amber-500/50',
+      bg: 'bg-amber-500/5',
+      text: 'text-amber-500',
+      glow: 'value-glow-amber',
+    },
+  };
+
+  const styles = colorClasses[color];
+  const accentColor = color === 'amber' ? 'bg-amber-500' : color === 'cyan' ? 'bg-[var(--data-cyan)]' : color === 'green' ? 'bg-[var(--profit-green)]' : 'bg-[var(--loss-red)]';
+  const pulseColor = color === 'amber' ? 'bg-amber-500' : color === 'cyan' ? 'bg-[var(--data-cyan)]' : color === 'green' ? 'bg-[var(--profit-green)]' : 'bg-[var(--loss-red)]';
+
+  return (
+    <div
+      className={`relative ${styles.border} ${styles.bg} backdrop-blur-sm p-5 rounded card-hover-lift transition-all ${showResults ? `animate-fade-slide-in stagger-${staggerIndex}` : 'opacity-0'}`}
+    >
+      <div className={`absolute top-0 left-0 w-1 h-full ${accentColor}`} />
+      <div className="flex items-start justify-between mb-3">
+        <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">{label}</span>
+        <div className={`h-1 w-1 rounded-full ${pulseColor} animate-pulse`} />
+      </div>
+      <div className="space-y-1">
+        <p className={`data-mono text-3xl font-bold ${styles.text} ${styles.glow}`}>
+          {formatFn(animatedValue)}
+        </p>
+        <p className="data-mono text-xs text-muted-foreground">{unit}</p>
+      </div>
+    </div>
+  );
+}
+
+function useAnimatedNumber(value: number, duration = 500): number {
+  const [displayValue, setDisplayValue] = useState(value);
+  const previousValue = useRef(value);
+
+  useEffect(() => {
+    if (previousValue.current === value) return;
+
+    const startValue = previousValue.current;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = startValue + (value - startValue) * easeOut;
+
+      setDisplayValue(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        previousValue.current = value;
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [value, duration]);
+
+  return displayValue;
+}
+
 export function PositionSizeCalculator() {
   const [results, setResults] = useState<PositionResults | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<PositionSizeCalculatorForm>({
     resolver: zodResolver(positionSizeCalculatorSchema),
@@ -77,34 +176,45 @@ export function PositionSizeCalculator() {
   });
 
   const handleCalculatePosition = useCallback((data: PositionSizeCalculatorForm) => {
-    try {
-      const input = {
-        tradeType: data.tradeType,
-        entryPrice: safeParseFloat(data.entry),
-        stopLossPrice: safeParseFloat(data.stopLoss),
-        leverage: safeParseFloat(data.leverage),
-        riskAmount: safeParseFloat(data.riskAmount),
-      };
-      
-      // Validate parameters
-      const validation = validateTradingParameters(
-        input.tradeType,
-        input.entryPrice,
-        input.stopLossPrice
-      );
-      
-      if (!validation.isValid) {
-        console.error('Validation errors:', validation.errors);
-        return;
+    setIsCalculating(true);
+    setShowResults(false);
+
+    setTimeout(() => {
+      try {
+        const input = {
+          tradeType: data.tradeType,
+          entryPrice: safeParseFloat(data.entry),
+          stopLossPrice: safeParseFloat(data.stopLoss),
+          leverage: safeParseFloat(data.leverage),
+          riskAmount: safeParseFloat(data.riskAmount),
+        };
+
+        const validation = validateTradingParameters(
+          input.tradeType,
+          input.entryPrice,
+          input.stopLossPrice
+        );
+
+        if (!validation.isValid) {
+          console.error('Validation errors:', validation.errors);
+          setIsCalculating(false);
+          return;
+        }
+
+        const result = calculatePositionSize(input);
+        setResults(result);
+        setIsCalculating(false);
+
+        requestAnimationFrame(() => {
+          setShowResults(true);
+        });
+
+      } catch (error) {
+        console.error('Calculation error:', error);
+        setResults(null);
+        setIsCalculating(false);
       }
-      
-      const result = calculatePositionSize(input);
-      setResults(result);
-      
-    } catch (error) {
-      console.error('Calculation error:', error);
-      setResults(null);
-    }
+    }, 300);
   }, []);
 
   return (
@@ -186,13 +296,14 @@ export function PositionSizeCalculator() {
                         placeholder="0.00"
                         step="0.01"
                         min="0"
-                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--data-cyan)] focus:ring-1 focus:ring-[var(--data-cyan)]/20 transition-all pl-3"
+                        aria-describedby="entry-price-hint"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus-visible:border-[var(--data-cyan)] focus-visible:ring-[var(--data-cyan)]/30 transition-all pl-3 pr-12"
                         {...field}
                       />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground pointer-events-none">USD</div>
                     </div>
                   </FormControl>
-                  <FormMessage className="mt-1 text-xs" />
+                  <FormMessage className="mt-1 text-xs" role="alert" />
                 </FormItem>
               )}
             />
@@ -213,13 +324,14 @@ export function PositionSizeCalculator() {
                         step="0.1"
                         min="1"
                         max="100"
-                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--data-cyan)] focus:ring-1 focus:ring-[var(--data-cyan)]/20 transition-all pl-3"
+                        aria-describedby="leverage-hint"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus-visible:border-[var(--data-cyan)] focus-visible:ring-[var(--data-cyan)]/30 transition-all pl-3 pr-8"
                         {...field}
                       />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">×</div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground pointer-events-none">×</div>
                     </div>
                   </FormControl>
-                  <FormMessage className="mt-1 text-xs" />
+                  <FormMessage className="mt-1 text-xs" role="alert" />
                 </FormItem>
               )}
             />
@@ -239,13 +351,14 @@ export function PositionSizeCalculator() {
                         placeholder="0.00"
                         step="0.01"
                         min="0"
-                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--loss-red)] focus:ring-1 focus:ring-[var(--loss-red)]/20 transition-all pl-3"
+                        aria-describedby="stoploss-hint"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus-visible:border-[var(--loss-red)] focus-visible:ring-[var(--loss-red)]/30 transition-all pl-3 pr-12"
                         {...field}
                       />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground pointer-events-none">USD</div>
                     </div>
                   </FormControl>
-                  <FormMessage className="mt-1 text-xs" />
+                  <FormMessage className="mt-1 text-xs" role="alert" />
                 </FormItem>
               )}
             />
@@ -265,13 +378,14 @@ export function PositionSizeCalculator() {
                         placeholder="100.00"
                         step="0.01"
                         min="0"
-                        className="h-12 data-mono text-lg bg-background border-border/50 focus:border-[var(--data-cyan)] focus:ring-1 focus:ring-[var(--data-cyan)]/20 transition-all pl-3"
+                        aria-describedby="risk-amount-hint"
+                        className="h-12 data-mono text-lg bg-background border-border/50 focus-visible:border-[var(--data-cyan)] focus-visible:ring-[var(--data-cyan)]/30 transition-all pl-3 pr-12"
                         {...field}
                       />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground">USD</div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 data-mono text-xs text-muted-foreground pointer-events-none">USD</div>
                     </div>
                   </FormControl>
-                  <FormMessage className="mt-1 text-xs" />
+                  <FormMessage className="mt-1 text-xs" role="alert" />
                 </FormItem>
               )}
             />
@@ -279,85 +393,82 @@ export function PositionSizeCalculator() {
 
           <Button
             type="submit"
-            className="w-full h-14 data-mono text-sm font-bold uppercase tracking-wider bg-[var(--data-cyan)] text-background hover:bg-[var(--data-cyan)]/90 border border-[var(--data-cyan)] hover:shadow-[0_0_20px_-5px_var(--data-cyan)] transition-all duration-300 relative overflow-hidden group"
+            disabled={isCalculating}
+            className="w-full h-14 data-mono text-sm font-bold uppercase tracking-wider bg-[var(--data-cyan)] text-background hover:bg-[var(--data-cyan)]/90 border border-[var(--data-cyan)] hover:shadow-[0_0_20px_-5px_var(--data-cyan)] transition-all duration-300 relative overflow-hidden group btn-press focus-glow-cyan disabled:opacity-70"
             onClick={form.handleSubmit(handleCalculatePosition)}
+            aria-busy={isCalculating}
           >
             <span className="relative z-10 flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Execute Calculation
+              {isCalculating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Calculator className="h-4 w-4" />
+                  Execute Calculation
+                </>
+              )}
             </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 ${isCalculating ? 'btn-processing' : 'translate-x-[-100%] group-hover:translate-x-[100%]'}`} />
           </Button>
         </div>
 
         {results && (
-          <div className="border-t border-border/30 pt-6 space-y-6">
-            <div className="flex items-baseline gap-2 mb-4">
+          <div
+            ref={resultsRef}
+            className="border-t border-border/30 pt-6 space-y-6"
+            role="region"
+            aria-live="polite"
+            aria-label="Calculation results"
+          >
+            <div className={`flex items-baseline gap-2 mb-4 ${showResults ? 'animate-fade-slide-in' : 'opacity-0'}`}>
               <span className="data-mono text-xs text-[var(--data-cyan)] uppercase tracking-wider">OUTPUT_RESULTS</span>
               <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
               <span className="data-mono text-[10px] text-muted-foreground">{'// CALCULATED'}</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Position Size */}
-              <div className="relative border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--data-cyan)]/50 transition-all">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--data-cyan)]" />
-                <div className="flex items-start justify-between mb-3">
-                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Position Size</span>
-                  <div className="h-1 w-1 rounded-full bg-[var(--data-cyan)] animate-pulse" />
-                </div>
-                <div className="space-y-1">
-                  <p className="data-mono text-3xl font-bold text-[var(--data-cyan)] number-update">
-                    {results.positionSize.toLocaleString(undefined, { maximumFractionDigits: 4 })}
-                  </p>
-                  <p className="data-mono text-xs text-muted-foreground">UNITS</p>
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-4">
+              <ResultCard
+                label="Position Size"
+                value={results.positionSize}
+                unit="UNITS"
+                color="cyan"
+                formatFn={(v) => v.toLocaleString(undefined, { maximumFractionDigits: 4 })}
+                showResults={showResults}
+                staggerIndex={1}
+              />
 
-              {/* Margin Required */}
-              <div className="relative border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--data-cyan)]/50 transition-all">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--data-cyan)]" />
-                <div className="flex items-start justify-between mb-3">
-                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Margin Required</span>
-                  <div className="h-1 w-1 rounded-full bg-[var(--data-cyan)] animate-pulse" />
-                </div>
-                <div className="space-y-1">
-                  <p className="data-mono text-3xl font-bold text-[var(--data-cyan)] number-update">
-                    {formatCurrency(results.margin)}
-                  </p>
-                  <p className="data-mono text-xs text-muted-foreground">CAPITAL_REQUIRED</p>
-                </div>
-              </div>
+              <ResultCard
+                label="Margin Required"
+                value={results.margin}
+                unit="CAPITAL_REQUIRED"
+                color="cyan"
+                formatFn={formatCurrency}
+                showResults={showResults}
+                staggerIndex={2}
+              />
 
-              {/* Risk Percentage */}
-              <div className="relative border border-amber-500/30 bg-amber-500/5 backdrop-blur-sm p-5 rounded group hover:border-amber-500/50 transition-all">
-                <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
-                <div className="flex items-start justify-between mb-3">
-                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Risk Distance</span>
-                  <div className="h-1 w-1 rounded-full bg-amber-500 animate-pulse" />
-                </div>
-                <div className="space-y-1">
-                  <p className="data-mono text-3xl font-bold text-amber-500 number-update">
-                    {formatPercentage(results.riskPercentage)}
-                  </p>
-                  <p className="data-mono text-xs text-muted-foreground">TO_STOPLOSS</p>
-                </div>
-              </div>
+              <ResultCard
+                label="Risk Distance"
+                value={results.riskPercentage}
+                unit="TO_STOPLOSS"
+                color="amber"
+                formatFn={formatPercentage}
+                showResults={showResults}
+                staggerIndex={3}
+              />
 
-              {/* Maximum Loss */}
-              <div className="relative border border-[var(--loss-red)]/30 bg-[var(--loss-red)]/5 backdrop-blur-sm p-5 rounded group hover:border-[var(--loss-red)]/50 transition-all">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[var(--loss-red)]" />
-                <div className="flex items-start justify-between mb-3">
-                  <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Maximum Loss</span>
-                  <div className="h-1 w-1 rounded-full bg-[var(--loss-red)] animate-pulse" />
-                </div>
-                <div className="space-y-1">
-                  <p className="data-mono text-3xl font-bold text-[var(--loss-red)] number-update">
-                    {formatCurrency(results.potentialLoss)}
-                  </p>
-                  <p className="data-mono text-xs text-muted-foreground">MAX_RISK</p>
-                </div>
-              </div>
+              <ResultCard
+                label="Maximum Loss"
+                value={results.potentialLoss}
+                unit="MAX_RISK"
+                color="red"
+                formatFn={formatCurrency}
+                showResults={showResults}
+                staggerIndex={4}
+              />
             </div>
           </div>
         )}

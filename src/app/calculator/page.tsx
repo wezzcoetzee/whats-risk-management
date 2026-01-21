@@ -12,12 +12,15 @@ function CalculatorContent() {
   const { calculatorType, isInitialized } = useCalculatorSelection();
   const currentCalculator = getCalculatorMetadata(calculatorType);
 
-  // Show loading state while initializing
   if (!isInitialized) {
     return (
       <div className="container mx-auto py-8 px-4 max-w-4xl relative">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
+        <div className="flex items-center justify-center min-h-[400px]" role="status" aria-live="polite">
+          <div className="flex flex-col items-center gap-3">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" aria-hidden="true"></div>
+            <span className="data-mono text-xs text-muted-foreground uppercase tracking-wider cursor-blink">Initializing Terminal</span>
+            <span className="sr-only">Loading calculator</span>
+          </div>
         </div>
       </div>
     );
@@ -156,8 +159,12 @@ export default function CalculatorPage() {
   return (
     <Suspense fallback={
       <div className="container mx-auto py-8 px-4 max-w-4xl relative">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full"></div>
+        <div className="flex items-center justify-center min-h-[400px]" role="status" aria-live="polite">
+          <div className="flex flex-col items-center gap-3">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" aria-hidden="true"></div>
+            <span className="data-mono text-xs text-muted-foreground uppercase tracking-wider cursor-blink">Initializing Terminal</span>
+            <span className="sr-only">Loading calculator</span>
+          </div>
         </div>
       </div>
     }>
