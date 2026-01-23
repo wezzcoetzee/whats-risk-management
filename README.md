@@ -11,6 +11,8 @@ An educational trading risk management calculator designed to help traders learn
 - **Position Size Calculator**: Determines optimal position size based on risk tolerance, entry/stop loss levels, and leverage
 - **Profit Calculator**: Analyzes profit potential and risk/reward ratios for trading positions with multiple take-profit levels
 
+The application also includes educational guides on position sizing strategies, risk-reward ratios, and calculation methods. A live price ticker displays real-time cryptocurrency prices from Hyperliquid.
+
 The application features mathematical accuracy with corrected formulas, comprehensive input validation, and a modern glassmorphism UI with dark/light theme support.
 
 ## Technologies Used
@@ -108,10 +110,15 @@ npm run lint     # Alternative with npm
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── calculator/         # Calculator application page
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
+│   ├── calculator/         # Calculator section
+│   │   ├── page.tsx        # Calculator hub/selection
+│   │   ├── position-size/  # Position size calculator page
+│   │   ├── profit/         # Profit calculator page
 │   │   └── opengraph-image.tsx
+│   ├── guides/             # Educational content
+│   │   ├── how-to-calculate-position-size/
+│   │   ├── position-sizing-strategies/
+│   │   └── risk-reward-ratio/
 │   ├── globals.css         # Global styles
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Landing page
@@ -122,17 +129,24 @@ src/
 ├── components/
 │   ├── calculators/        # Calculator components
 │   │   ├── position-size-calculator.tsx
-│   │   └── profit-calculator.tsx
+│   │   ├── profit-calculator.tsx
+│   │   └── result-card.tsx
 │   ├── ui/                 # shadcn/ui components
 │   ├── header.tsx          # App header
+│   ├── price-ticker.tsx    # Live price ticker
+│   ├── rolling-number.tsx  # Animated number display
+│   ├── risk-terminal-logo.tsx
 │   ├── theme-provider.tsx  # Theme context provider
 │   ├── theme-toggle.tsx    # Dark/light toggle
 │   └── structured-data.tsx # JSON-LD SEO data
 ├── hooks/
-│   └── use-calculator-selection.ts  # Calculator state hook
+│   ├── use-animated-number.ts   # Number animation hook
+│   └── use-hyperliquid-prices.ts # Live price data hook
 └── lib/
-    ├── calculations.ts     # Core calculation logic
-    └── utils.ts            # Utility functions
+    ├── calculations.ts      # Core calculation logic
+    ├── calculations.test.ts # Calculation tests
+    ├── formatters.ts        # Number/currency formatting
+    └── utils.ts             # Utility functions
 ```
 
 ## Key Features
@@ -155,6 +169,14 @@ src/
 - **Dark/Light theme** support with system preference detection
 - **Responsive design** optimized for all devices
 - **Real-time validation** with user-friendly error messages
+- **Live price ticker** with real-time Hyperliquid data
+- **Animated number transitions** for smooth value updates
+
+### Educational Content
+
+- **Position sizing strategies** guide
+- **Risk-reward ratio** fundamentals
+- **Step-by-step calculation** tutorials
 
 ### SEO Optimization
 
