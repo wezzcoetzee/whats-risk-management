@@ -330,11 +330,42 @@
   }
 
   .ticker-scroll {
-    animation: ticker-scroll 40s linear infinite;
+    animation: ticker-scroll 48s linear infinite;
   }
 
   .ticker-scroll:hover {
     animation-play-state: paused;
+  }
+
+  /* Rolling number animations */
+  @keyframes roll-up {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes roll-down {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-roll-up {
+    animation: roll-up 150ms ease-out forwards;
+  }
+
+  .animate-roll-down {
+    animation: roll-down 150ms ease-out forwards;
   }
 
   /* Noise texture overlay */

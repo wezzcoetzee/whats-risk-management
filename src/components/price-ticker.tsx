@@ -1,6 +1,7 @@
 "use client";
 
 import { useHyperliquidPrices, type CoinPrice } from "@/hooks/use-hyperliquid-prices";
+import { RollingNumber } from "./rolling-number";
 
 function formatPrice(price: number): string {
   if (price >= 1000) {
@@ -17,19 +18,19 @@ function formatPrice(price: number): string {
 
 function TickerItem({ coin }: { coin: CoinPrice }) {
   const isPositive = coin.change24h >= 0;
+  const priceFormatted = `$${formatPrice(coin.price)}`;
+  const changeFormatted = `${isPositive ? "+" : ""}${coin.change24h.toFixed(2)}%`;
 
   return (
     <span className="inline-flex items-center gap-1.5 px-3">
       <span className="text-muted-foreground">{coin.symbol}</span>
-      <span className="data-mono">${formatPrice(coin.price)}</span>
-      <span
+      <RollingNumber value={priceFormatted} className="data-mono" />
+      <RollingNumber
+        value={changeFormatted}
         className={`data-mono ${
           isPositive ? "text-[var(--profit-green)]" : "text-[var(--loss-red)]"
         }`}
-      >
-        {isPositive ? "+" : ""}
-        {coin.change24h.toFixed(2)}%
-      </span>
+      />
     </span>
   );
 }
