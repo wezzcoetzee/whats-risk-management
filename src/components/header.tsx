@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronDown, Calculator, Shield, Target } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { RiskTerminalLogo } from "./risk-terminal-logo";
+import { PriceTicker } from "./price-ticker";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +16,8 @@ export function Header() {
       <div className="container mx-auto px-4 py-3">
         <nav className="flex items-center justify-between">
           <RiskTerminalLogo />
-          <div className="flex items-center gap-6">
+          <PriceTicker />
+          <div className="flex items-center gap-6 shrink-0">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-1.5 border border-border/50 bg-card/30 rounded hover:border-[var(--profit-green)]/50 hover:bg-card/50 transition-all data-mono text-xs uppercase tracking-wider">
                 <Calculator className="h-3.5 w-3.5" />

@@ -319,6 +319,24 @@
     margin-left: 2px;
   }
 
+  /* Price ticker scroll animation */
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ticker-scroll {
+    animation: ticker-scroll 40s linear infinite;
+  }
+
+  .ticker-scroll:hover {
+    animation-play-state: paused;
+  }
+
   /* Noise texture overlay */
   .noise-texture {
     position: relative;
