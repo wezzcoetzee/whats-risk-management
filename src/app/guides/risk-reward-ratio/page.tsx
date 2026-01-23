@@ -4,7 +4,7 @@ import { Target, Calculator, ArrowRight, TrendingUp, TrendingDown } from "lucide
 import { BreadcrumbStructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
-  title: "Risk Reward Ratio Explained - How to Calculate R:R in Trading (2024)",
+  title: "Risk Reward Ratio Explained - How to Calculate R:R in Trading (2025)",
   description: "Learn what risk/reward ratio is and how to calculate it for forex, crypto, and stock trading. Complete guide with examples, optimal ratios, and a free R:R calculator.",
   keywords: [
     "risk reward ratio",
@@ -49,7 +49,7 @@ function ArticleStructuredData() {
       "name": "Risk Terminal",
       "url": "https://whatsriskmanagement.com"
     },
-    "datePublished": "2024-01-15",
+    "datePublished": "2025-01-15",
     "dateModified": new Date().toISOString().split('T')[0],
     "mainEntityOfPage": "https://whatsriskmanagement.com/guides/risk-reward-ratio"
   };

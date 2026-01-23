@@ -4,7 +4,7 @@ import { Shield, Calculator, ArrowRight, CheckCircle2 } from "lucide-react";
 import { BreadcrumbStructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
-  title: "How to Calculate Position Size in Trading - Complete Guide (2024)",
+  title: "How to Calculate Position Size in Trading - Complete Guide (2025)",
   description: "Learn how to calculate position size for forex, crypto, and stock trading. Step-by-step guide with formulas, examples, and a free position size calculator. Master risk management today.",
   keywords: [
     "how to calculate position size",
@@ -49,7 +49,7 @@ function ArticleStructuredData() {
       "name": "Risk Terminal",
       "url": "https://whatsriskmanagement.com"
     },
-    "datePublished": "2024-01-15",
+    "datePublished": "2025-01-15",
     "dateModified": new Date().toISOString().split('T')[0],
     "mainEntityOfPage": "https://whatsriskmanagement.com/guides/how-to-calculate-position-size"
   };

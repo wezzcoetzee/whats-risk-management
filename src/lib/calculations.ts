@@ -104,7 +104,8 @@ export function calculateProfitMetrics(input: ProfitCalculationInput): ProfitCal
   // Calculate metrics
   const totalProfit = profits.reduce((sum, profit) => sum + profit, 0);
   const averageProfit = profits.length > 0 ? totalProfit / profits.length : 0;
-  const margin = (positionSize * entryPrice) / leverage;
+  // positionSize is notional value in USD, so margin = notional / leverage
+  const margin = positionSize / leverage;
   const roi = margin > 0 ? (averageProfit / margin) * 100 : 0;
 
   // Risk/Reward: Use the first (primary) take profit level for standard R:R calculation

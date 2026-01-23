@@ -4,7 +4,7 @@ import { Shield, Calculator, ArrowRight, BarChart3, TrendingUp, AlertTriangle } 
 import { BreadcrumbStructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
-  title: "Position Sizing Strategies for Trading - Complete Guide (2024)",
+  title: "Position Sizing Strategies for Trading - Complete Guide (2025)",
   description: "Learn advanced position sizing strategies used by professional traders. Fixed fractional, Kelly Criterion, volatility-based sizing, and more. Protect your capital and maximize returns.",
   keywords: [
     "position sizing strategies",
@@ -49,7 +49,7 @@ function ArticleStructuredData() {
       "name": "Risk Terminal",
       "url": "https://whatsriskmanagement.com"
     },
-    "datePublished": "2024-01-15",
+    "datePublished": "2025-01-15",
     "dateModified": new Date().toISOString().split('T')[0],
     "mainEntityOfPage": "https://whatsriskmanagement.com/guides/position-sizing-strategies"
   };
