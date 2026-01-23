@@ -196,29 +196,4 @@ export function validateTradingParameters(
   };
 }
 
-/**
- * Format currency values consistently
- */
-export function formatCurrency(value: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-}
-
-/**
- * Format percentage values consistently
- */
-export function formatPercentage(value: number, decimals = 2): string {
-  return `${value.toFixed(decimals)}%`;
-}
-
-/**
- * Safe number parsing with validation
- */
-export function safeParseFloat(value: string | number): number {
-  const parsed = typeof value === 'string' ? parseFloat(value) : value;
-  return isNaN(parsed) || !isFinite(parsed) ? 0 : parsed;
-}
+export { formatCurrency, formatPercentage, safeParseFloat } from "./formatters";

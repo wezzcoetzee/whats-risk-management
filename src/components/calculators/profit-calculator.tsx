@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup } from "@/components/ui/radio-group";
+import { ResultCard } from "@/components/calculators/result-card";
 import {
   calculateProfitMetrics,
   validateTradingParameters,
@@ -98,102 +99,6 @@ const profitCalculatorSchema = z.object({
 
 type ProfitCalculatorForm = z.infer<typeof profitCalculatorSchema>;
 type ProfitResults = ProfitCalculationResult;
-
-type ResultColor = 'cyan' | 'green' | 'red' | 'amber';
-
-function useAnimatedNumber(value: number, duration = 500): number {
-  const [displayValue, setDisplayValue] = useState(value);
-  const previousValue = useRef(value);
-
-  useEffect(() => {
-    if (previousValue.current === value) return;
-
-    const startValue = previousValue.current;
-    const startTime = performance.now();
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = startValue + (value - startValue) * easeOut;
-
-      setDisplayValue(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        previousValue.current = value;
-      }
-    };
-
-    requestAnimationFrame(animate);
-  }, [value, duration]);
-
-  return displayValue;
-}
-
-interface ResultCardProps {
-  label: string;
-  value: number;
-  unit: string;
-  color: ResultColor;
-  formatFn: (value: number) => string;
-  showResults: boolean;
-  staggerIndex: number;
-}
-
-function ResultCard({ label, value, unit, color, formatFn, showResults, staggerIndex }: ResultCardProps) {
-  const animatedValue = useAnimatedNumber(value, 600);
-
-  const colorClasses: Record<ResultColor, { border: string; bg: string; text: string; glow: string }> = {
-    cyan: {
-      border: 'border-[var(--data-cyan)]/30 hover:border-[var(--data-cyan)]/50',
-      bg: 'bg-[var(--data-cyan)]/5',
-      text: 'text-[var(--data-cyan)]',
-      glow: 'value-glow-cyan',
-    },
-    green: {
-      border: 'border-[var(--profit-green)]/30 hover:border-[var(--profit-green)]/50',
-      bg: 'bg-[var(--profit-green)]/5',
-      text: 'text-[var(--profit-green)]',
-      glow: 'value-glow-green',
-    },
-    red: {
-      border: 'border-[var(--loss-red)]/30 hover:border-[var(--loss-red)]/50',
-      bg: 'bg-[var(--loss-red)]/5',
-      text: 'text-[var(--loss-red)]',
-      glow: 'value-glow-red',
-    },
-    amber: {
-      border: 'border-amber-500/30 hover:border-amber-500/50',
-      bg: 'bg-amber-500/5',
-      text: 'text-amber-500',
-      glow: 'value-glow-amber',
-    },
-  };
-
-  const styles = colorClasses[color];
-  const accentColor = color === 'amber' ? 'bg-amber-500' : color === 'cyan' ? 'bg-[var(--data-cyan)]' : color === 'green' ? 'bg-[var(--profit-green)]' : 'bg-[var(--loss-red)]';
-  const pulseColor = color === 'amber' ? 'bg-amber-500' : color === 'cyan' ? 'bg-[var(--data-cyan)]' : color === 'green' ? 'bg-[var(--profit-green)]' : 'bg-[var(--loss-red)]';
-
-  return (
-    <div
-      className={`relative ${styles.border} ${styles.bg} backdrop-blur-sm p-5 rounded card-hover-lift transition-all ${showResults ? `animate-fade-slide-in stagger-${staggerIndex}` : 'opacity-0'}`}
-    >
-      <div className={`absolute top-0 left-0 w-1 h-full ${accentColor}`} />
-      <div className="flex items-start justify-between mb-3">
-        <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">{label}</span>
-        <div className={`h-1 w-1 rounded-full ${pulseColor} animate-pulse`} />
-      </div>
-      <div className="space-y-1">
-        <p className={`data-mono text-3xl font-bold ${styles.text} ${styles.glow}`}>
-          {formatFn(animatedValue)}
-        </p>
-        <p className="data-mono text-xs text-muted-foreground">{unit}</p>
-      </div>
-    </div>
-  );
-}
 
 export function ProfitCalculator() {
   const [results, setResults] = useState<ProfitResults | null>(null);

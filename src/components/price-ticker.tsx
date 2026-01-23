@@ -2,6 +2,7 @@
 
 import { useHyperliquidPrices, type CoinPrice } from "@/hooks/use-hyperliquid-prices";
 import { RollingNumber } from "./rolling-number";
+import { Skeleton } from "./ui/skeleton";
 
 function formatPrice(price: number): string {
   if (price >= 1000) {
@@ -45,6 +46,26 @@ function TickerContent({ coins }: { coins: CoinPrice[] }) {
   );
 }
 
+function TickerSkeleton() {
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3">
+      <Skeleton className="h-3 w-8" />
+      <Skeleton className="h-3 w-16 data-mono" />
+      <Skeleton className="h-3 w-12 data-mono" />
+    </span>
+  );
+}
+
+function TickerSkeletonContent() {
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <TickerSkeleton key={i} />
+      ))}
+    </>
+  );
+}
+
 interface PriceTickerProps {
   className?: string;
 }
@@ -52,24 +73,28 @@ interface PriceTickerProps {
 export function PriceTicker({ className = "" }: PriceTickerProps) {
   const { coinPrices, isConnected } = useHyperliquidPrices();
 
-  if (!isConnected || coinPrices.length === 0) {
-    return null;
-  }
+  const isLoading = !isConnected || coinPrices.length === 0;
 
   return (
     <div className={`overflow-hidden relative ${className}`}>
       <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-      <div
-        className="flex whitespace-nowrap text-xs items-center ticker-scroll"
-        style={{ width: "max-content" }}
-      >
-        <TickerContent coins={coinPrices} />
-        <span className="text-border px-2">|</span>
-        <TickerContent coins={coinPrices} />
-        <span className="text-border px-2">|</span>
-      </div>
+      {isLoading ? (
+        <div className="flex whitespace-nowrap text-xs items-center">
+          <TickerSkeletonContent />
+        </div>
+      ) : (
+        <div
+          className="flex whitespace-nowrap text-xs items-center ticker-scroll"
+          style={{ width: "max-content" }}
+        >
+          <TickerContent coins={coinPrices} />
+          <span className="text-border px-2">|</span>
+          <TickerContent coins={coinPrices} />
+          <span className="text-border px-2">|</span>
+        </div>
+      )}
     </div>
   );
 }
