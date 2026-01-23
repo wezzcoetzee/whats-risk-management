@@ -58,9 +58,9 @@ export function calculatePositionSize(input: PositionCalculationInput): Position
   const riskPercentage = (riskPerUnit / entryPrice) * 100;
   
   // Position size calculation:
-  // Units needed = Risk Amount / (Risk per unit × Leverage)
-  // Leverage multiplies the risk per unit because losses are amplified
-  const positionSize = riskAmount / (riskPerUnit * leverage);
+  // Units needed = Risk Amount / Risk per unit
+  // Leverage only affects margin requirements, not P&L
+  const positionSize = riskAmount / riskPerUnit;
   
   // Calculate notional value of the position
   const notionalValue = positionSize * entryPrice;
@@ -84,37 +84,41 @@ export function calculatePositionSize(input: PositionCalculationInput): Position
  */
 export function calculateProfitMetrics(input: ProfitCalculationInput): ProfitCalculationResult {
   const { tradeType, entryPrice, stopLossPrice, leverage, positionSize, takeProfits } = input;
-  
-  // Calculate potential loss (leverage effect already included in position size)
+
+  // Calculate potential loss (full position hits stop before any TP)
   const riskPercentage = Math.abs(stopLossPrice - entryPrice) / entryPrice;
   const potentialLoss = riskPercentage * positionSize;
-  
-  // Calculate profit at each take profit level (no leverage multiplication - already in position size)
-  const profits = takeProfits.map(tp => {
-    if (tp <= 0) return 0;
 
+  // Filter valid take profits first to determine allocation
+  const validTakeProfits = takeProfits.filter(tp => tp > 0);
+  const numTargets = validTakeProfits.length;
+
+  // Position is split equally across all take profit levels
+  // e.g., 2 TPs = 50% each, 4 TPs = 25% each
+  const positionPerTarget = numTargets > 0 ? positionSize / numTargets : 0;
+
+  // Calculate profit at each take profit level with allocated position
+  const profits = validTakeProfits.map(tp => {
     const profitPercentage = tradeType === 'LONG'
       ? (tp - entryPrice) / entryPrice
       : (entryPrice - tp) / entryPrice;
 
-    // Return absolute profit amount (leverage effect already in position size)
-    return profitPercentage * positionSize;
+    if (profitPercentage <= 0) return 0;
+
+    return profitPercentage * positionPerTarget;
   }).filter(profit => profit > 0);
 
   // Calculate metrics
   const totalProfit = profits.reduce((sum, profit) => sum + profit, 0);
   const averageProfit = profits.length > 0 ? totalProfit / profits.length : 0;
-  // positionSize is notional value in USD, so margin = notional / leverage
   const margin = positionSize / leverage;
-  const roi = margin > 0 ? (averageProfit / margin) * 100 : 0;
+  const roi = margin > 0 ? (totalProfit / margin) * 100 : 0;
 
-  // Risk/Reward: Use the first (primary) take profit level for standard R:R calculation
-  const primaryProfit = profits.length > 0 ? profits[0] : 0;
-  const primaryRiskReward = potentialLoss > 0 ? primaryProfit / potentialLoss : 0;
+  // Risk/Reward based on total profit vs potential loss
+  const primaryRiskReward = potentialLoss > 0 ? totalProfit / potentialLoss : 0;
   const averageRiskReward = potentialLoss > 0 ? averageProfit / potentialLoss : 0;
 
-  // Build take profit breakdown with individual R:R ratios
-  const validTakeProfits = takeProfits.filter(tp => tp > 0);
+  // Build take profit breakdown with individual profits and R:R
   const takeProfitBreakdown: TakeProfitBreakdown[] = validTakeProfits.map((tp, index) => ({
     price: tp,
     profit: profits[index] || 0,

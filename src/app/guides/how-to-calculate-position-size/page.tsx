@@ -85,7 +85,7 @@ function HowToStructuredData() {
         "@type": "HowToStep",
         "position": 3,
         "name": "Apply the Formula",
-        "text": "Divide your risk amount by (risk per unit × leverage) to get your position size."
+        "text": "Divide your risk amount by risk per unit to get your position size in units."
       },
       {
         "@type": "HowToStep",
@@ -173,7 +173,7 @@ export default function HowToCalculatePositionSizePage() {
           <div className="not-prose my-8">
             <div className="bg-card/50 border border-[var(--data-cyan)]/30 rounded-lg p-6">
               <code className="text-[var(--data-cyan)] text-xl block text-center">
-                Position Size = Risk Amount ÷ (Risk Per Unit × Leverage)
+                Position Size = Risk Amount ÷ Risk Per Unit
               </code>
             </div>
           </div>
@@ -182,8 +182,11 @@ export default function HowToCalculatePositionSizePage() {
           <ul>
             <li><strong>Risk Amount</strong> = The dollar amount you&apos;re willing to lose on this trade</li>
             <li><strong>Risk Per Unit</strong> = |Entry Price - Stop Loss Price|</li>
-            <li><strong>Leverage</strong> = Your leverage multiplier (1x for spot trading)</li>
           </ul>
+          <p>
+            <strong>Note:</strong> Leverage does not affect position size or P&L—it only determines
+            how much margin (collateral) you need. Your profit or loss is always: Position Size × Price Change.
+          </p>
 
           <h2>Step-by-Step Position Size Calculation</h2>
 
@@ -225,16 +228,15 @@ export default function HowToCalculatePositionSizePage() {
               <p className="text-sm text-muted-foreground mb-2">Continuing our example:</p>
               <p>Risk Amount: $100</p>
               <p>Risk Per Unit: $1,000</p>
-              <p>Leverage: 10x</p>
-              <p className="mt-2">Position Size = $100 ÷ ($1,000 × 10)</p>
-              <p className="text-[var(--data-cyan)] font-semibold">Position Size = 0.01 BTC</p>
+              <p className="mt-2">Position Size = $100 ÷ $1,000</p>
+              <p className="text-[var(--data-cyan)] font-semibold">Position Size = 0.1 BTC</p>
             </div>
           </div>
 
           <h3>Step 4: Verify Your Margin</h3>
           <p>
             Make sure you have enough capital to open this position. With 10x leverage,
-            0.01 BTC at $50,000 requires $50 in margin.
+            0.1 BTC at $50,000 (notional value $5,000) requires $500 in margin.
           </p>
 
           <h2>Why the 1% Rule Matters</h2>
@@ -299,8 +301,8 @@ export default function HowToCalculatePositionSizePage() {
                 solution: "Stick to 1-2% maximum. Even with a 60% win rate, you'll face losing streaks."
               },
               {
-                mistake: "Ignoring leverage in calculations",
-                solution: "Leverage affects both your position size and margin requirements. Always include it in your formula."
+                mistake: "Confusing leverage with position size",
+                solution: "Leverage only affects margin requirements, not your position size or P&L. Your loss is always: Position Size × Price Change."
               },
               {
                 mistake: "Moving stop losses further away",
