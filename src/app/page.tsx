@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 import { WebsiteStructuredData, OrganizationStructuredData, FAQStructuredData } from "@/components/structured-data";
 
 export const metadata: Metadata = {
-  title: "Risk Terminal - Professional Trading Risk Management & Position Size Calculators",
-  description: "Free professional-grade trading risk management calculators. Calculate optimal position sizes, analyze profit potential, manage leverage, and optimize risk/reward ratios. Institutional-level trading tools for forex, crypto, and stock traders.",
+  title: "Position Size Calculator - Free Trading Risk Management Tools | Risk Terminal",
+  description: "Free position size calculator for forex, crypto, and stock trading. Calculate optimal position sizes, analyze profit potential, manage leverage, and optimize risk/reward ratios. Professional trading tools.",
   keywords: [
     "trading risk management",
     "position size calculator",
@@ -74,9 +74,12 @@ export default function Home() {
           </div>
 
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight uppercase font-display">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight font-display">
               <span className="bg-gradient-to-r from-foreground via-[var(--profit-green)] to-foreground bg-clip-text text-transparent">
-                Risk Terminal
+                Free Position Size Calculator
+              </span>
+              <span className="block text-2xl md:text-3xl mt-2 text-muted-foreground font-normal">
+                & Trading Risk Management Tools
               </span>
             </h1>
             <div className="h-1 w-32 mx-auto bg-gradient-to-r from-transparent via-[var(--profit-green)] to-transparent" />
@@ -88,7 +91,7 @@ export default function Home() {
 
         {/* Feature Cards - Terminal Style */}
         <section className="grid md:grid-cols-2 gap-6 max-w-5xl w-full mb-20" aria-label="Trading calculators">
-          <Link href="/calculator?type=position" className="group">
+          <Link href="/calculator/position-size" className="group">
             <Card className="relative overflow-hidden border border-[var(--data-cyan)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--data-cyan)]/60 hover:shadow-[0_0_30px_-5px_var(--data-cyan)] noise-texture card-hover-lift">
               {/* Top accent line */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--data-cyan)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -137,7 +140,7 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/calculator?type=profit" className="group">
+          <Link href="/calculator/profit" className="group">
             <Card className="relative overflow-hidden border border-[var(--profit-green)]/30 bg-card/80 backdrop-blur-sm cursor-pointer h-full transition-all duration-300 hover:border-[var(--profit-green)]/60 hover:shadow-[0_0_30px_-5px_var(--profit-green)] noise-texture card-hover-lift">
               {/* Top accent line */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--profit-green)] to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />

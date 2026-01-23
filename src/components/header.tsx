@@ -24,7 +24,7 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-72 border-border/50 bg-card/95 backdrop-blur-sm">
                 <DropdownMenuItem asChild>
-                  <Link href="/calculator?type=position" className="flex items-center gap-3 w-full p-3 cursor-pointer group">
+                  <Link href="/calculator/position-size" className="flex items-center gap-3 w-full p-3 cursor-pointer group">
                     <div className="h-8 w-8 border border-[var(--data-cyan)]/30 bg-[var(--data-cyan)]/5 flex items-center justify-center group-hover:border-[var(--data-cyan)]/50 transition-colors">
                       <Shield className="h-4 w-4 text-[var(--data-cyan)]" />
                     </div>
@@ -35,7 +35,7 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/calculator?type=profit" className="flex items-center gap-3 w-full p-3 cursor-pointer group">
+                  <Link href="/calculator/profit" className="flex items-center gap-3 w-full p-3 cursor-pointer group">
                     <div className="h-8 w-8 border border-[var(--profit-green)]/30 bg-[var(--profit-green)]/5 flex items-center justify-center group-hover:border-[var(--profit-green)]/50 transition-colors">
                       <Target className="h-4 w-4 text-[var(--profit-green)]" />
                     </div>

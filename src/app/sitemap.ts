@@ -15,19 +15,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${baseUrl}/calculator`,
       lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/calculator/position-size`,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/calculator?type=position`,
+      url: `${baseUrl}/calculator/profit`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/guides/how-to-calculate-position-size`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/calculator?type=profit`,
+      url: `${baseUrl}/guides/risk-reward-ratio`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/guides/position-sizing-strategies`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
   ]
