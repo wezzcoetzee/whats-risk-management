@@ -62,7 +62,7 @@ function ArticleStructuredData() {
   );
 }
 
-export default function RiskRewardRatioPage() {
+export default async function RiskRewardRatioPage() {
   return (
     <>
       <ArticleStructuredData />

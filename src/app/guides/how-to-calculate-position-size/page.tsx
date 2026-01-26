@@ -104,7 +104,7 @@ function HowToStructuredData() {
   );
 }
 
-export default function HowToCalculatePositionSizePage() {
+export default async function HowToCalculatePositionSizePage() {
   return (
     <>
       <ArticleStructuredData />

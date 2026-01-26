@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CalculatorIndexPage() {
+export default async function CalculatorIndexPage() {
   return (
     <>
       <WebApplicationStructuredData />

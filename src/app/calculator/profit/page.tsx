@@ -70,7 +70,7 @@ function ProfitCalculatorStructuredData() {
   );
 }
 
-export default function ProfitCalculatorPage() {
+export default async function ProfitCalculatorPage() {
   return (
     <>
       <ProfitCalculatorStructuredData />
