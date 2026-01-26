@@ -62,7 +62,7 @@ function ArticleStructuredData() {
   );
 }
 
-export default function PositionSizingStrategiesPage() {
+export default async function PositionSizingStrategiesPage() {
   return (
     <>
       <ArticleStructuredData />

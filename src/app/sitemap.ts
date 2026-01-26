@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export const dynamic = 'force-static'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://whatsriskmanagement.com'
 
   return [

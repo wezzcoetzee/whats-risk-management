@@ -70,7 +70,7 @@ function PositionSizeStructuredData() {
   );
 }
 
-export default function PositionSizeCalculatorPage() {
+export default async function PositionSizeCalculatorPage() {
   return (
     <>
       <PositionSizeStructuredData />
