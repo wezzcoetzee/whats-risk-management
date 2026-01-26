@@ -32,7 +32,7 @@
     "zod": "^4.3.6"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "echo 'Skipping ESLint due to circular reference bug in eslint-config-next@16.1.5'"
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "devDependencies": {
     "@eslint/eslintrc": "2.1.4",
@@ -42,7 +42,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "8.57.1",
-    "eslint-config-next": "16.1.5",
+    "eslint-config-next": "15.1.6",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "tailwindcss": "^4.1.18",
