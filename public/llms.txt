@@ -1,0 +1,25 @@
+# Risk Terminal
+
+> Risk Terminal (whatsriskmanagement.com) is a free, professional-grade trading risk management toolkit. It provides calculators for position sizing and profit/loss analysis, along with educational guides covering position sizing formulas, strategies, and risk/reward ratios. Built for forex, crypto, and stock traders who want institutional-level precision.
+
+Risk Terminal helps traders answer the question: "How much should I risk on this trade?" The tools are entirely free, run in the browser, and require no account or login.
+
+The site is built with Next.js 15 and deployed as a static site on Azure Static Web Apps.
+
+**Disclaimer:** Risk Terminal is for educational purposes only and does not constitute financial advice. Trading involves substantial risk of loss.
+
+## Calculators
+
+- [Position Size Calculator](https://whatsriskmanagement.com/calculator/position-size): Calculate optimal position size based on account size, risk percentage, entry price, stop loss, and leverage. Uses the formula: Position Size = Risk Amount / Risk Per Unit.
+- [Profit Calculator](https://whatsriskmanagement.com/calculator/profit): Analyze potential profit, ROI, and risk/reward ratios across up to four take-profit levels. Accounts for leverage in margin calculations without double-counting.
+- [Calculator Hub](https://whatsriskmanagement.com/calculator): Overview and entry point to all available calculators.
+
+## Guides
+
+- [How to Calculate Position Size](https://whatsriskmanagement.com/guides/how-to-calculate-position-size): Step-by-step guide with the position sizing formula, worked examples for crypto/forex/stocks, the 1% rule, and common mistakes to avoid.
+- [Position Sizing Strategies](https://whatsriskmanagement.com/guides/position-sizing-strategies): Advanced strategies including fixed fractional, Kelly Criterion, volatility-based (ATR) sizing, and fixed ratio. Includes comparison table and recommendations.
+- [Risk Reward Ratio Explained](https://whatsriskmanagement.com/guides/risk-reward-ratio): What R:R is, how to calculate it, required win rates at different ratios, multiple take-profit strategies, and expected value calculations.
+
+## Optional
+
+- [Home](https://whatsriskmanagement.com): Landing page with site overview and feature highlights.
