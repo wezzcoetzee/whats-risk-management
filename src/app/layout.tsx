@@ -56,6 +56,15 @@ export const metadata: Metadata = {
   authors: [{ name: "Risk Terminal" }],
   creator: "Risk Terminal",
   publisher: "Risk Terminal",
+  icons: {
+    icon: [
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   formatDetection: {
     email: false,
     address: false,
