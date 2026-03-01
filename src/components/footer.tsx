@@ -8,6 +8,12 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--profit-green)]/30 to-transparent" />
 
       <div className="container mx-auto px-4 py-6">
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <span className="data-mono text-[10px] text-muted-foreground uppercase tracking-wider">Guides</span>
+          <Link href="/guides/how-to-calculate-position-size" className="data-mono text-xs text-muted-foreground hover:text-[var(--profit-green)] transition-colors">Position Sizing</Link>
+          <Link href="/guides/position-sizing-strategies" className="data-mono text-xs text-muted-foreground hover:text-[var(--profit-green)] transition-colors">Strategies</Link>
+          <Link href="/guides/risk-reward-ratio" className="data-mono text-xs text-muted-foreground hover:text-[var(--profit-green)] transition-colors">Risk Reward</Link>
+        </div>
         <div className="flex items-center justify-center gap-3">
           <div className="relative">
             <div className="h-1.5 w-1.5 rounded-full bg-[var(--profit-green)]" />
