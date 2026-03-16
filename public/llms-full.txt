@@ -1,0 +1,588 @@
+# Risk Terminal
+
+> Risk Terminal (whatsriskmanagement.com) is a free, professional-grade trading risk management toolkit. It provides calculators for position sizing and profit/loss analysis, along with educational guides covering position sizing formulas, strategies, and risk/reward ratios. Built for forex, crypto, and stock traders who want institutional-level precision.
+
+Risk Terminal helps traders answer the question: "How much should I risk on this trade?" The tools are entirely free, run in the browser, and require no account or login.
+
+**Disclaimer:** This application is for educational purposes only and does not constitute financial advice. Trading involves substantial risk of loss. Always consult with a qualified financial advisor before making trading decisions.
+
+---
+
+## Home Page
+
+**URL:** https://whatsriskmanagement.com
+
+Risk Terminal provides professional-grade trading calculators for institutional-level risk management. The landing page presents two core tools and three system capability highlights.
+
+### Core Tools
+
+**Position Sizing (RISK-CALC)**
+Calculate optimal position size based on risk tolerance and stop loss levels. Institutional-grade capital allocation. Features: Risk-Based Sizing, Leverage Control, Margin Analysis, Loss Protection.
+
+**Profit Analysis (P&L-CALC)**
+Analyze profit potential across multiple take-profit levels. Calculate ROI, risk/reward ratios, and expected returns. Features: Multi-TP Analysis, ROI Calculator, R:R Ratios, Expected Value.
+
+### System Capabilities
+
+**Capital Protection**
+Algorithmic position sizing ensures you never risk more than predefined thresholds. Institutional-grade capital preservation.
+
+**Return Optimization**
+Multi-level profit analysis with R:R optimization. Maximize upside while maintaining strict risk parameters.
+
+**Precision Analytics**
+Real-time mathematical calculations with zero latency. Data-driven decision making at institutional velocity.
+
+---
+
+## Calculator Hub
+
+**URL:** https://whatsriskmanagement.com/calculator
+
+Professional-grade risk management tools for forex, crypto, and stock traders. Calculate position sizes, analyze profits, and optimize your risk/reward ratios.
+
+### Available Calculators
+
+**Position Size Calculator**
+Calculate optimal position size based on risk tolerance, stop loss levels, and leverage. Never risk more than you can afford to lose.
+
+**Profit Calculator**
+Analyze profit potential across multiple take-profit levels. Calculate ROI, risk/reward ratios, and expected returns.
+
+### Why Use Trading Calculators?
+
+**Protect Your Capital**
+Proper position sizing ensures you never risk more than a small percentage of your account on any single trade.
+
+**Maximize Returns**
+Analyze potential profits and risk/reward ratios to only take trades that are worth the risk.
+
+**Trade Like a Pro**
+Use the same risk management techniques as institutional traders and hedge fund managers.
+
+---
+
+## Position Size Calculator
+
+**URL:** https://whatsriskmanagement.com/calculator/position-size
+
+Calculate your optimal position size based on risk tolerance, stop loss distance, and leverage. Never risk more than you can afford to lose. Professional traders typically risk 1-2% of their account per trade.
+
+### How to Calculate Position Size
+
+Position sizing is the most critical aspect of risk management in trading. It determines how many units of an asset you should buy or sell based on your risk tolerance and the distance to your stop loss.
+
+**The Position Size Formula**
+
+```
+Position Size = Risk Amount / (Risk Per Unit × Leverage)
+```
+
+Where **Risk Per Unit** is the absolute difference between your entry price and stop loss price.
+
+**Example Calculation**
+
+Given a $10,000 account risking 1% ($100) on a trade:
+- Entry Price: $50,000 (Bitcoin)
+- Stop Loss: $49,000
+- Risk Per Unit: $1,000
+- Leverage: 10x
+- Position Size: $100 / ($1,000 × 10) = 0.01 BTC
+
+**Why Position Sizing Matters**
+
+Even with a 50% win rate, proper position sizing can make you profitable. The key is to never risk more than a small percentage of your account on any single trade. This ensures that a string of losses won't wipe out your account.
+
+**The 1% Rule**
+
+Most professional traders follow the 1% rule: never risk more than 1% of your total account on a single trade. Some aggressive traders may risk up to 2%, but anything beyond that significantly increases the risk of ruin.
+
+**Risk Warning:** Professional risk management protocol: Maximum 1-2% account risk per position. Always define exit parameters before trade execution. Capital preservation is paramount.
+
+### Calculator Inputs
+
+- Trade Type: LONG or SHORT
+- Account Size (USD)
+- Risk Percentage (% of account)
+- Entry Price
+- Stop Loss Price
+- Leverage (multiplier)
+
+### Calculator Outputs
+
+- Position Size (units)
+- Margin Required (USD)
+- Potential Loss (USD)
+- Risk Per Unit (% price distance to stop)
+
+---
+
+## Profit Calculator
+
+**URL:** https://whatsriskmanagement.com/calculator/profit
+
+Analyze potential profits across multiple take-profit levels. Calculate ROI, risk/reward ratios, and expected returns before entering any trade. Make data-driven decisions.
+
+### Understanding Risk/Reward Ratios
+
+The risk/reward ratio is one of the most important metrics in trading. It compares the potential profit of a trade to its potential loss, helping you make better decisions about which trades to take.
+
+**The Risk/Reward Formula**
+
+```
+Risk/Reward Ratio = Potential Profit / Potential Loss
+```
+
+A ratio of 2:1 means you stand to make $2 for every $1 you risk. The higher the ratio, the better the trade.
+
+**Why Risk/Reward Matters**
+
+With a 2:1 risk/reward ratio, you only need to win 33% of your trades to break even. With a 3:1 ratio, you only need 25% winners. This is why professional traders focus on finding high-probability setups with favorable risk/reward.
+
+**Multiple Take Profit Levels**
+
+Many traders use multiple take-profit levels to lock in profits while letting winners run. For example, you might take 50% off at TP1 (1:1), 30% at TP2 (2:1), and let the remaining 20% run to TP3 (3:1) or higher.
+
+**Calculating ROI with Leverage**
+
+ROI (Return on Investment) in leveraged trading is calculated based on your margin, not the total position size. A 10% price move with 10x leverage equals 100% ROI on your margin. The calculator automatically accounts for leverage in all calculations.
+
+**Trading Tip:** Always aim for a minimum 1:2 risk/reward ratio. This means your potential profit should be at least twice your potential loss. Professional traders often target 1:3 or higher.
+
+### Calculator Inputs
+
+- Trade Type: LONG or SHORT
+- Entry Price
+- Stop Loss Price
+- Leverage (multiplier)
+- Position Size (units)
+- Take Profit 1–4 (prices, up to 4 levels)
+
+### Calculator Outputs
+
+Per take-profit level:
+- Profit (USD)
+- Risk/Reward ratio
+
+Overall summary:
+- Total Profit (USD)
+- ROI (%)
+- Primary Risk/Reward ratio
+- Average Risk/Reward ratio
+- Potential Loss (USD)
+- Margin Used (USD)
+
+---
+
+## Guide: How to Calculate Position Size
+
+**URL:** https://whatsriskmanagement.com/guides/how-to-calculate-position-size
+
+Position sizing is the single most important skill in trading. Learn the exact formula professional traders use to protect their capital and maximize returns.
+
+### What is Position Sizing?
+
+Position sizing determines how many units of an asset (shares, contracts, lots, or coins) you should buy or sell on any given trade. It's the cornerstone of risk management and the difference between professional traders and gamblers.
+
+Without proper position sizing, even a strategy with a 70% win rate can blow up your account. With proper position sizing, even a strategy with a 40% win rate can be profitable.
+
+### The Position Size Formula
+
+```
+Position Size = Risk Amount / Risk Per Unit
+```
+
+Where:
+- **Risk Amount** = The dollar amount you're willing to lose on this trade
+- **Risk Per Unit** = |Entry Price - Stop Loss Price|
+
+**Note:** Leverage does not affect position size or P&L — it only determines how much margin (collateral) you need. Your profit or loss is always: Position Size × Price Change.
+
+### Step-by-Step Position Size Calculation
+
+**Step 1: Determine Your Risk Amount**
+
+Decide how much of your account you're willing to risk on this single trade. The industry standard is 1-2% of your total account.
+
+Example:
+- Account Size: $10,000
+- Risk Percentage: 1%
+- Risk Amount: $100
+
+**Step 2: Calculate Risk Per Unit**
+
+Find the absolute difference between your entry price and stop loss price. This tells you how much you'll lose per unit if your stop loss is hit.
+
+Example (Long Trade):
+- Entry Price: $50,000
+- Stop Loss: $49,000
+- Risk Per Unit: $1,000
+
+**Step 3: Apply the Formula**
+
+- Risk Amount: $100
+- Risk Per Unit: $1,000
+- Position Size = $100 / $1,000 = 0.1 BTC
+
+**Step 4: Verify Your Margin**
+
+Make sure you have enough capital to open this position. With 10x leverage, 0.1 BTC at $50,000 (notional value $5,000) requires $500 in margin.
+
+### Why the 1% Rule Matters
+
+**Risking 10% Per Trade:** After 7 consecutive losses (common in trading), you've lost 52% of your account. You need a 108% return just to break even.
+
+**Risking 1% Per Trade:** After 7 consecutive losses, you've lost only 6.8% of your account. You need just a 7.3% return to break even.
+
+### Position Sizing for Different Markets
+
+**Forex Position Sizing**
+
+In forex, position size is measured in lots. A standard lot is 100,000 units of the base currency. Most brokers also offer mini lots (10,000 units) and micro lots (1,000 units). The pip value depends on the currency pair and lot size. For USD pairs, a standard lot has a pip value of approximately $10.
+
+**Crypto Position Sizing**
+
+Cryptocurrency exchanges typically allow fractional positions, making precise position sizing easier. Always account for high volatility by using wider stop losses.
+
+**Stock Position Sizing**
+
+For stocks, round your position size to whole shares. If the calculation gives you 123.7 shares, either round down to 123 or accept slightly higher risk at 124 shares.
+
+### Common Position Sizing Mistakes
+
+1. **Not using a stop loss** — Always define your exit before entering a trade. No stop loss = no way to calculate position size.
+
+2. **Risking too much per trade** — Stick to 1-2% maximum. Even with a 60% win rate, you'll face losing streaks.
+
+3. **Confusing leverage with position size** — Leverage only affects margin requirements, not your position size or P&L. Your loss is always: Position Size × Price Change.
+
+4. **Moving stop losses further away** — If you move your stop, you must reduce your position size proportionally to maintain the same risk.
+
+### Advanced Position Sizing Strategies
+
+**Fixed Fractional Position Sizing**
+
+Always risk a fixed percentage of your current account balance. As your account grows, your position sizes grow. As it shrinks, positions shrink automatically.
+
+**Kelly Criterion**
+
+A mathematical formula that calculates the optimal position size based on your win rate and average win/loss ratio. Most traders use a "half-Kelly" approach for more conservative sizing.
+
+**Volatility-Based Position Sizing**
+
+Adjust position sizes based on the asset's volatility. Higher volatility means smaller positions. The ATR (Average True Range) indicator is commonly used for this.
+
+---
+
+## Guide: Position Sizing Strategies
+
+**URL:** https://whatsriskmanagement.com/guides/position-sizing-strategies
+
+Beyond the basic formula lies a world of sophisticated position sizing techniques. Learn the strategies used by hedge funds and professional traders to optimize returns while protecting capital.
+
+### Why Position Sizing Strategy Matters
+
+Two traders with identical entry and exit signals can have vastly different results based solely on their position sizing strategy. The right approach can turn a mediocre system into a profitable one, while the wrong approach can destroy even the best edge.
+
+### 1. Fixed Fractional Position Sizing
+
+Fixed fractional (also called constant percentage risk) is the most widely used professional position sizing method. You risk a fixed percentage of your current account balance on every trade.
+
+**Formula:**
+```
+Position Size = (Account × Risk%) / Risk Per Unit
+```
+
+**How It Works:**
+- Choose a fixed risk percentage (typically 1-2%)
+- Calculate risk amount from current account balance
+- Position size automatically scales with account growth/decline
+
+**Example:**
+- Account: $50,000 → Risk 1% = $500
+- After growth to $60,000 → Risk 1% = $600
+- After drawdown to $40,000 → Risk 1% = $400
+- Automatic position scaling protects capital during drawdowns
+
+**Pros:**
+- Simple to implement and understand
+- Automatically reduces risk during losing streaks
+- Compounds gains during winning streaks
+- Mathematically impossible to lose entire account (asymptotic to zero)
+
+**Cons:**
+- Slower recovery after drawdowns
+- Doesn't account for trade quality differences
+- May be too conservative for small accounts
+
+**Best For:** Most traders. This should be your default strategy unless you have specific reasons to use another method.
+
+### 2. Kelly Criterion
+
+The Kelly Criterion is a mathematical formula developed by John Kelly at Bell Labs in 1956. It calculates the optimal position size to maximize long-term growth rate while avoiding ruin.
+
+**Formula:**
+```
+Kelly % = W - [(1-W) / R]
+```
+Where W = Win Rate, R = Win/Loss Ratio
+
+**Example Calculation:**
+- Win Rate (W): 55%
+- Average Win: $200, Average Loss: $100 (R = 2)
+- Kelly % = 0.55 - [(1 - 0.55) / 2] = 0.55 - 0.225 = 32.5%
+
+**The Problem with Full Kelly**
+
+Full Kelly is extremely aggressive. The formula assumes you know your exact win rate, know your exact win/loss ratio, and have infinite opportunities. Most professionals use "half-Kelly" (50%) or "quarter-Kelly" (25%). Half-Kelly achieves 75% of the growth rate with much smoother equity curves.
+
+**Pros:**
+- Mathematically optimal for long-term growth
+- Accounts for edge quality
+- Larger positions when edge is stronger
+
+**Cons:**
+- Requires accurate win rate and R:R estimates
+- Full Kelly creates massive drawdowns
+- Sensitive to estimation errors
+
+**Best For:** Experienced traders with well-documented track records who know their statistics. Always use fractional Kelly (25-50%).
+
+### 3. Volatility-Based Position Sizing
+
+Volatility-based sizing adjusts position size based on the asset's current volatility. Higher volatility = smaller positions. Lower volatility = larger positions. The most common implementation uses the Average True Range (ATR) indicator.
+
+**Formula:**
+```
+Position Size = (Account × Risk%) / (ATR × ATR Multiplier)
+```
+
+**Example:**
+- Account: $100,000
+- Risk: 1% ($1,000)
+- 14-day ATR: $500
+- ATR Multiplier: 2 (stop at 2× ATR)
+- Position Size = $1,000 / ($500 × 2) = 1 unit
+
+**Why This Works**
+
+During high volatility periods, your stop loss (in dollar terms) naturally gets wider. Volatility sizing compensates by reducing position size, keeping your actual dollar risk constant.
+
+**Pros:**
+- Normalizes risk across different market conditions
+- Prevents oversized positions in volatile markets
+- Allows larger positions in calm markets
+
+**Cons:**
+- More complex to calculate
+- Requires volatility indicator
+- May reduce positions just when opportunity is greatest
+
+**Best For:** Traders who trade multiple assets with different volatilities, or trade the same asset through varying market conditions.
+
+### 4. Fixed Ratio Position Sizing
+
+Developed by Ryan Jones, fixed ratio position sizing increases position size only after achieving a specific profit target (delta).
+
+**Formula:**
+```
+Next Level = Current Level + (Current Units × Delta)
+```
+
+**Example:**
+- Starting: $10,000, 1 contract, Delta = $2,000
+- Level 1: $10,000 (1 contract)
+- Level 2: $12,000 (2 contracts) — after $2,000 profit
+- Level 3: $16,000 (3 contracts) — after $4,000 more profit
+- Level 4: $22,000 (4 contracts) — after $6,000 more profit
+- Required profit increases with each level, creating a smoother growth curve
+
+**Pros:**
+- Smoother equity curve than fixed fractional
+- Faster recovery from drawdowns
+- More conservative scaling up
+
+**Cons:**
+- More complex to track
+- Less mathematically optimal
+- Slower compounding in strong uptrends
+
+### Comparing the Strategies
+
+| Strategy | Complexity | Risk Level | Best For |
+|---|---|---|---|
+| Fixed Fractional | Low | Moderate | Everyone |
+| Kelly Criterion | Medium | High (if full) | Experienced traders |
+| Volatility-Based | Medium | Moderate | Multi-asset traders |
+| Fixed Ratio | High | Conservative | Futures traders |
+
+### Recommendation
+
+For most traders, fixed fractional position sizing at 1-2% risk is the optimal choice. It's simple, effective, and time-tested. Start there and only consider more advanced methods after you have a documented track record of at least 100+ trades.
+
+**The Most Important Rule:** Whatever strategy you choose, the key is consistency. Switching between methods mid-drawdown or chasing "optimal" sizing will hurt your results more than any sub-optimal strategy choice.
+
+---
+
+## Guide: Risk Reward Ratio Explained
+
+**URL:** https://whatsriskmanagement.com/guides/risk-reward-ratio
+
+The risk/reward ratio is the most important metric for evaluating trade quality. Learn how to calculate it and why professional traders never take trades below 1:2.
+
+### What is Risk/Reward Ratio?
+
+The risk/reward ratio (also written as R:R, RRR, or risk-to-reward) compares the potential profit of a trade to its potential loss. It answers the question: "How much can I make for every dollar I risk?"
+
+A risk/reward ratio of 1:2 means you stand to make $2 for every $1 you risk. A ratio of 1:3 means $3 profit for every $1 risked.
+
+### The Risk/Reward Formula
+
+```
+Risk/Reward Ratio = Potential Profit / Potential Loss
+```
+
+Or in terms of price levels:
+
+```
+R:R = |Take Profit - Entry| / |Entry - Stop Loss|
+```
+
+### Risk/Reward Calculation Examples
+
+**Example 1: Long Trade (Bitcoin)**
+- Entry Price: $50,000
+- Stop Loss: $48,000 (risking $2,000 per BTC)
+- Take Profit: $56,000 (potential gain $6,000 per BTC)
+- R:R = $6,000 / $2,000 = **1:3**
+
+**Example 2: Short Trade (EUR/USD)**
+- Entry Price: 1.1000
+- Stop Loss: 1.1050 (risking 50 pips)
+- Take Profit: 1.0900 (potential gain 100 pips)
+- R:R = 100 pips / 50 pips = **1:2**
+
+### Why Risk/Reward Ratio Matters
+
+The risk/reward ratio determines your required win rate to be profitable:
+
+| Risk/Reward | Required Win Rate | Verdict |
+|---|---|---|
+| 1:1 | 50% | Breakeven |
+| 1:2 | 33% | Good |
+| 1:3 | 25% | Excellent |
+| 1:4 | 20% | Outstanding |
+
+With a 1:3 risk/reward ratio, you can be wrong 75% of the time and still break even. This is why professionals focus on finding high R:R setups rather than trying to be right on every trade.
+
+### What is a Good Risk/Reward Ratio?
+
+Most professional traders have a minimum threshold of 1:2. Trading styles and their typical R:R ranges:
+
+**Scalping:** R:R typically 1:1 to 1:1.5. Relies on high win rate (70%+) due to lower ratios.
+
+**Day Trading:** R:R typically 1:2 to 1:3. Balances win rate with reward potential.
+
+**Swing Trading:** R:R typically 1:3 to 1:5. Holds positions longer for bigger moves.
+
+**Position Trading:** R:R can exceed 1:10. Targets major trend moves over weeks/months.
+
+### Using Multiple Take Profit Levels
+
+Many traders use multiple take profit targets to optimize their average R:R while locking in profits along the way:
+
+- **TP1 (50% of position):** 1:1 — Lock in some profit
+- **TP2 (30% of position):** 1:2 — Secure good returns
+- **TP3 (20% of position):** 1:4+ — Let winners run
+
+This strategy gives an average R:R of around 1:1.8 while reducing the emotional impact of trades that reverse after being profitable.
+
+### Common Risk/Reward Mistakes
+
+**Mistake 1: Moving Stop Loss to Improve R:R**
+Never move your stop loss further away to create a better-looking R:R. The stop loss should be placed at a level where your trade thesis is invalidated, not to hit an arbitrary ratio.
+
+**Mistake 2: Ignoring Market Structure**
+A 1:10 R:R means nothing if your take profit is above a major resistance level. Always ensure your targets are realistic based on support/resistance, previous highs/lows, and market structure.
+
+**Mistake 3: Only Looking at R:R**
+Risk/reward is important, but it's not everything. A 1:5 R:R trade with 10% probability of success is worse than a 1:2 R:R trade with 60% probability. Consider the complete picture.
+
+### Expected Value: The Complete Picture
+
+To truly evaluate a trade, combine R:R with your estimated win probability to calculate Expected Value (EV):
+
+```
+EV = (Win Rate × Reward) - (Loss Rate × Risk)
+```
+
+**Example:**
+- Risk/Reward: 1:2 (risk $100 to make $200)
+- Win Rate: 50%
+- EV = (0.50 × $200) - (0.50 × $100) = $100 - $50 = **+$50 per trade**
+
+---
+
+## Core Calculation Logic
+
+The following formulas are used internally by the Risk Terminal calculators.
+
+### Position Size Calculation
+
+**Inputs:** trade type (LONG/SHORT), entry price, stop loss price, leverage, risk amount
+
+**Formula:**
+```
+riskPerUnit = |stopLossPrice - entryPrice|
+positionSize = riskAmount / riskPerUnit
+notionalValue = positionSize × entryPrice
+margin = notionalValue / leverage
+potentialLoss = riskAmount
+```
+
+Leverage only affects margin requirements. P&L is always: positionSize × priceChange.
+
+### Profit Metrics Calculation
+
+**Inputs:** trade type, entry price, stop loss price, leverage, position size, take profits (array)
+
+**Formulas:**
+```
+riskPercentage = |stopLossPrice - entryPrice| / entryPrice
+potentialLoss = riskPercentage × positionSize
+positionPerTarget = positionSize / numberOfTargets
+
+For each take profit:
+  profitPercentage = (tp - entryPrice) / entryPrice  [LONG]
+  profitPercentage = (entryPrice - tp) / entryPrice  [SHORT]
+  profit = profitPercentage × positionPerTarget
+
+totalProfit = sum(profits)
+margin = positionSize / leverage
+roi = (totalProfit / margin) × 100
+primaryRiskReward = totalProfit / potentialLoss
+averageRiskReward = averageProfit / potentialLoss
+```
+
+### Validation Rules
+
+For LONG positions:
+- Stop loss must be below entry price
+- Each take profit must be above entry price
+- Take profits must be in ascending order
+
+For SHORT positions:
+- Stop loss must be above entry price
+- Each take profit must be below entry price
+- Take profits must be in descending order
+
+---
+
+## About Risk Terminal
+
+**Website:** https://whatsriskmanagement.com
+**Creator:** wezzcoetzee.com
+**Framework:** Next.js 15 (App Router, static export)
+**Deployment:** Azure Static Web Apps
+
+Risk Terminal is a free, open-source trading risk management toolkit. It provides institutional-grade calculators and educational guides for retail traders in the forex, cryptocurrency, and stock markets. The application features a live price ticker with real-time cryptocurrency prices from Hyperliquid, dark/light theme support, and a responsive design optimized for all devices.
