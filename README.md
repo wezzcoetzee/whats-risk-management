@@ -19,7 +19,7 @@ The application features mathematical accuracy with corrected formulas, comprehe
 
 ### Core Framework
 
-- **Next.js 15** - React framework with App Router
+- **Next.js 16** - React framework with App Router
 - **React 19** - Latest React features and concurrent rendering
 - **TypeScript** - Type-safe development
 
@@ -105,6 +105,14 @@ bun run lint     # Run ESLint checks
 npm run lint     # Alternative with npm
 ```
 
+### Testing
+
+```bash
+bun run test            # Run Vitest in watch mode
+bun run test:run        # Run Vitest once
+bun run test:coverage   # Run tests with v8 coverage
+```
+
 ## Project Structure
 
 ```
@@ -133,6 +141,7 @@ src/
 │   │   └── result-card.tsx
 │   ├── ui/                 # shadcn/ui components
 │   ├── header.tsx          # App header
+│   ├── footer.tsx          # App footer
 │   ├── price-ticker.tsx    # Live price ticker
 │   ├── rolling-number.tsx  # Animated number display
 │   ├── risk-terminal-logo.tsx
@@ -187,7 +196,7 @@ src/
 
 ## Deployment
 
-The application is configured for deployment on Azure Static Web Apps with automatic CI/CD via GitHub Actions. The build process generates static files for optimal performance and global distribution.
+The application is configured for deployment on Cloudflare Pages with automatic CI/CD via GitHub Actions (`.github/workflows/cloudflare-pages.yml`). The build process generates static files for optimal performance and global distribution.
 
 ## Contributing
 
